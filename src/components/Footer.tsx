@@ -66,6 +66,7 @@ const MAP_EMBED_URL =
 const footerLinks = [
   { label: "Home", href: "/" },
   { label: "Featured Work", href: "/#featured-work" },
+  { label: "AI Work", href: "/ai-work" },
   { label: "Awards", href: "/#awards" },
   { label: "About Us", href: "/#about" },
   { label: "Team", href: "/#team" },

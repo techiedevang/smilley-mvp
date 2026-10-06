@@ -37,8 +37,8 @@ const sections = [
 ];
 
 const stats = [
-  { value: "30+", label: "Projects delivered" },
-  { value: "15+", label: "Years of experience" },
+  { value: "33+", label: "Projects delivered" },
+  { value: "9+", label: "Years of experience" },
   { value: "10+", label: "Awards won" },
   { value: "20+", label: "Industry trust" },
 ];
