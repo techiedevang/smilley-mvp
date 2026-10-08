@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "export",
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -14,19 +16,6 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  async redirects() {
-    return [
-      { source: "/about", destination: "/#about", permanent: false },
-      {
-        source: "/featured-work",
-        destination: "/#featured-work",
-        permanent: false,
-      },
-      { source: "/media/awards", destination: "/#awards", permanent: false },
-      { source: "/media/press", destination: "/press", permanent: false },
-      { source: "/media", destination: "/#press", permanent: false },
-    ];
   },
 };
 
