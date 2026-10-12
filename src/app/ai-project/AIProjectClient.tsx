@@ -8,15 +8,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIProjectClient() {
   const [filter, setFilter] = useState("All");
-  const filters = ["All", "Latest", "Popular"];
+  const filters = ["All", "Films", "Ads", "Music videos", "Visuals"];
 
   const aiProjects = [
-    { title: "Project 1", description: "AI Generated Short Film", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 2", description: "AI Visual Effects", category: "Popular", image: "/images/placeholder-poster.svg" },
-    { title: "Project 3", description: "AI Conceptual Art", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 4", description: "AI Narrative Generation", category: "Popular", image: "/images/placeholder-poster.svg" },
-    { title: "Project 5", description: "AI Sound Design", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 6", description: "AI Color Grading", category: "Popular", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | Music video", category: "Music videos", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | Visuals", category: "Visuals", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
   ];
 
   const filteredProjects = filter === "All"
@@ -37,15 +37,20 @@ export default function AIProjectClient() {
           </svg>
           <span className="text-sm tracking-wider uppercase font-medium">Back to AI Work</span>
         </Link>
-        <h1 className="font-serif text-4xl md:text-5xl font-light text-white mb-6">
-          AI <span className="text-gradient">Projects</span>
-        </h1>
-        <p className="text-[var(--fg-muted)] leading-relaxed max-w-2xl">
-          Exploring the frontiers of storytelling with artificial intelligence. Browse all our AI generated films, ads, and conceptual art.
-        </p>
+
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-2">
+          <div>
+            <h1 className="font-serif text-3xl font-light text-white mb-2">
+              AI Projects
+            </h1>
+            <p className="text-[var(--fg-muted)] text-sm mb-6">
+              A selection of work made with AI tools, from concept to final cut.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <section className="mb-24">
+      <section className="mb-24 mt-4">
         <div className="flex flex-wrap gap-2 mb-8 border-b border-[var(--border)] pb-8">
           {filters.map((f) => (
             <button
@@ -81,20 +86,18 @@ export default function AIProjectClient() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(var(--accent-rgb),0.5)]">
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
+                    <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black">
                       <Play size={20} fill="currentColor" className="ml-1" />
                     </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-white text-lg font-medium">{project.title}</h3>
-                    <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--accent)] px-2 py-0.5 rounded-full bg-[var(--accent)]/10">
-                      {project.category}
-                    </span>
+                  <div className="absolute bottom-4 left-0 right-0 text-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {`Project ${index + 1}: thumbnail or video`}
                   </div>
-                  <p className="text-[var(--fg-muted)] text-sm">{project.description}</p>
+                </div>
+                <div className="p-4 bg-[var(--bg-card)]">
+                  <h3 className="text-white text-md font-medium mb-1">{project.title}</h3>
+                  <p className="text-[var(--fg-muted)] text-xs">{project.description}</p>
                 </div>
               </motion.div>
             ))}
