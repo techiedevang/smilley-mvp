@@ -1,12 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIWorkClient() {
   const [filter, setFilter] = useState("All");
+  const [activeSection, setActiveSection] = useState("project");
+
+  const projectRef = useRef<HTMLElement>(null);
+  const studioRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-20% 0px -80% 0px", // Trigger when element is near top
+      }
+    );
+
+    if (projectRef.current) observer.observe(projectRef.current);
+    if (studioRef.current) observer.observe(studioRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 140;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+  };
 
   const filters = ["All", "Latest", "Popular"];
 
@@ -25,7 +64,7 @@ export default function AIWorkClient() {
 
   return (
     <div className="pt-32 pb-24 px-6 md:px-12 mx-auto max-w-7xl min-h-screen">
-      <div className="text-center mb-16 animate-reveal-up">
+      <div className="text-center mb-10 animate-reveal-up">
         <h1 className="font-serif text-4xl md:text-5xl font-light text-white mb-6">
           AI <span className="text-gradient">Work</span>
         </h1>
@@ -34,26 +73,66 @@ export default function AIWorkClient() {
         </p>
       </div>
 
-      <section className="mb-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-8">
+      <div className="flex justify-center mb-16 sticky top-[90px] md:top-[100px] z-50 animate-reveal-up" style={{ animationDelay: "0.1s" }}>
+        <div className="bg-[var(--bg)]/80 backdrop-blur-md p-1 rounded-full border border-[var(--border)] inline-flex">
+          <button
+            onClick={() => scrollToSection("project")}
+            className={`px-6 py-2 rounded-full text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
+              activeSection === "project"
+                ? "bg-[var(--accent)] text-black"
+                : "text-[var(--fg-muted)] hover:text-white"
+            }`}
+          >
+            AI Project
+          </button>
+          <button
+            onClick={() => scrollToSection("studio")}
+            className={`px-6 py-2 rounded-full text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
+              activeSection === "studio"
+                ? "bg-[var(--accent)] text-black"
+                : "text-[var(--fg-muted)] hover:text-white"
+            }`}
+          >
+            AI Studio
+          </button>
+        </div>
+      </div>
+
+      <section id="project" ref={projectRef} className="mb-24 scroll-mt-32">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-4">
           <h2 className="font-serif text-3xl font-light text-white mb-4 md:mb-0">
             AI Projects
           </h2>
-          <div className="flex flex-wrap gap-2">
-            {filters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 ${
-                  filter === f
-                    ? "bg-[var(--accent)] text-black"
-                    : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
+          <Link
+            href="/ai-project"
+            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+          >
+            See All Projects
+            <svg
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-8">
+          {filters.map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 ${
+                filter === f
+                  ? "bg-[var(--accent)] text-black"
+                  : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
         </div>
 
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -96,10 +175,26 @@ export default function AIWorkClient() {
         </motion.div>
       </section>
 
-      <section>
-        <h2 className="font-serif text-3xl font-light text-white mb-8 border-b border-[var(--border)] pb-4">
-          AI Studio
-        </h2>
+      <section id="studio" ref={studioRef} className="scroll-mt-32">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-8">
+          <h2 className="font-serif text-3xl font-light text-white mb-4 md:mb-0">
+            AI Studio
+          </h2>
+          <Link
+            href="/ai-studio"
+            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+          >
+            See All AI Studio
+            <svg
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
         <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 md:p-16 text-center group">
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
