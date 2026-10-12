@@ -1,5 +1,5 @@
-import AIWorkClient from "./AIWorkClient";
+import { redirect } from "next/navigation";
 
-export default function AIWorkPage() {
-  return <AIWorkClient />;
+export default function AIWorkRedirect() {
+  redirect("/ai-work/ai-projects");
 }
