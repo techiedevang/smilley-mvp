@@ -14,23 +14,29 @@ export default function AIWorkClient() {
   const studioRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-20% 0px -80% 0px", // Trigger when element is near top
+    const handleScroll = () => {
+      if (!projectRef.current || !studioRef.current) return;
+
+      // Header offset is around 140px, adjust detection threshold
+      const headerOffset = 180;
+
+      const projectRect = projectRef.current.getBoundingClientRect();
+      const studioRect = studioRef.current.getBoundingClientRect();
+
+      // If the top of the studio section is near or past the header offset, it's active
+      if (studioRect.top <= headerOffset + 200) {
+        setActiveSection("studio");
+      } else {
+        // Otherwise, if we're scrolled down at all, and studio isn't active, project is active
+        setActiveSection("project");
       }
-    );
+    };
 
-    if (projectRef.current) observer.observe(projectRef.current);
-    if (studioRef.current) observer.observe(studioRef.current);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once on mount to set initial state
+    handleScroll();
 
-    return () => observer.disconnect();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -47,15 +53,15 @@ export default function AIWorkClient() {
     }
   };
 
-  const filters = ["All", "Latest", "Popular"];
+  const filters = ["All", "Films", "Ads", "Music videos", "Visuals"];
 
   const aiProjects = [
-    { title: "Project 1", description: "AI Generated Short Film", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 2", description: "AI Visual Effects", category: "Popular", image: "/images/placeholder-poster.svg" },
-    { title: "Project 3", description: "AI Conceptual Art", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 4", description: "AI Narrative Generation", category: "Popular", image: "/images/placeholder-poster.svg" },
-    { title: "Project 5", description: "AI Sound Design", category: "Latest", image: "/images/placeholder-poster.svg" },
-    { title: "Project 6", description: "AI Color Grading", category: "Popular", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | Music video", category: "Music videos", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | Visuals", category: "Visuals", image: "/images/placeholder-poster.svg" },
+    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
   ];
 
   const filteredProjects = filter === "All"
@@ -99,27 +105,24 @@ export default function AIWorkClient() {
       </div>
 
       <section id="project" ref={projectRef} className="mb-24 scroll-mt-32">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-4">
-          <h2 className="font-serif text-3xl font-light text-white mb-4 md:mb-0">
-            AI Projects
-          </h2>
+        <div className="flex flex-col md:flex-row md:items-start justify-between mb-2">
+          <div>
+            <h2 className="font-serif text-3xl font-light text-white mb-2">
+              AI Projects
+            </h2>
+            <p className="text-[var(--fg-muted)] text-sm mb-6">
+              A selection of work made with AI tools, from concept to final cut.
+            </p>
+          </div>
           <Link
             href="/ai-project"
-            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+            className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 mt-2 md:mt-0 flex items-center"
           >
-            See All Projects
-            <svg
-              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            View all AI projects
           </Link>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8 border-b border-[var(--border)] pb-8">
           {filters.map((f) => (
             <button
               key={f}
@@ -154,20 +157,18 @@ export default function AIWorkClient() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(var(--accent-rgb),0.5)]">
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
+                    <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black">
                       <Play size={20} fill="currentColor" className="ml-1" />
                     </div>
                   </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-white text-lg font-medium">{project.title}</h3>
-                    <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--accent)] px-2 py-0.5 rounded-full bg-[var(--accent)]/10">
-                      {project.category}
-                    </span>
+                  <div className="absolute bottom-4 left-0 right-0 text-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {`Project ${index + 1}: thumbnail or video`}
                   </div>
-                  <p className="text-[var(--fg-muted)] text-sm">{project.description}</p>
+                </div>
+                <div className="p-4 bg-[var(--bg-card)]">
+                  <h3 className="text-white text-md font-medium mb-1">{project.title}</h3>
+                  <p className="text-[var(--fg-muted)] text-xs">{project.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -175,38 +176,56 @@ export default function AIWorkClient() {
         </motion.div>
       </section>
 
-      <section id="studio" ref={studioRef} className="scroll-mt-32">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-8">
-          <h2 className="font-serif text-3xl font-light text-white mb-4 md:mb-0">
+      <section id="studio" ref={studioRef} className="scroll-mt-32 bg-[#0B0F19] rounded-xl border border-[var(--border)] p-6 md:p-10 mb-24">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10">
+          <h2 className="font-serif text-3xl font-light text-white">
             AI Studio
           </h2>
           <Link
             href="/ai-studio"
-            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+            className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 mt-2 md:mt-0"
           >
-            See All AI Studio
-            <svg
-              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+            See All AI Studio →
           </Link>
         </div>
-        <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 md:p-16 text-center group">
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <div className="relative z-10 animate-reveal-up" style={{ animationDelay: "0.2s" }}>
-            <h3 className="text-3xl text-white font-serif font-light mb-4">Coming Soon</h3>
-            <p className="text-[var(--fg-muted)] max-w-xl mx-auto leading-relaxed">
-              Our dedicated AI Studio is currently under development. Stay tuned for innovative tools and services that blend artificial intelligence with cinematic storytelling.
-            </p>
-            <div className="mt-8">
-              <button className="btn-primary px-8 py-3 text-sm font-semibold tracking-widest uppercase">
-                Notify Me
-              </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI films and ads</h3>
+            <p className="text-[#9CA3AF] text-sm">Concept, script, AI production and edit for brand films and commercials.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI visuals and campaigns</h3>
+            <p className="text-[#9CA3AF] text-sm">Posters, product shots and social content in one consistent look.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI + live action</h3>
+            <p className="text-[#9CA3AF] text-sm">Shoot on set, extend with AI. Backgrounds, VFX and extra shots.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">Training and consulting</h3>
+            <p className="text-[#9CA3AF] text-sm">Help your team start using AI tools in creative work.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-white text-lg font-medium mb-4">How it works</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Brief</h4>
+              <p className="text-[#9CA3AF] text-xs">You share the idea and goal.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Concept</h4>
+              <p className="text-[#9CA3AF] text-xs">Script, style and storyboard.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Create</h4>
+              <p className="text-[#9CA3AF] text-xs">AI production with our directors.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Deliver</h4>
+              <p className="text-[#9CA3AF] text-xs">Final edit, sound and formats.</p>
             </div>
           </div>
         </div>

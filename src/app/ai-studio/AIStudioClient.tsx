@@ -19,27 +19,58 @@ export default function AIStudioClient() {
           </svg>
           <span className="text-sm tracking-wider uppercase font-medium">Back to AI Work</span>
         </Link>
-        <h1 className="font-serif text-4xl md:text-5xl font-light text-white mb-6">
-          AI <span className="text-gradient">Studio</span>
-        </h1>
-        <p className="text-[var(--fg-muted)] leading-relaxed max-w-2xl">
-          Innovative tools and services that blend artificial intelligence with cinematic storytelling.
-        </p>
       </div>
 
-      <section>
-        <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 md:p-16 text-center group min-h-[40vh] flex flex-col justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <section className="bg-[#0B0F19] rounded-xl border border-[var(--border)] p-6 md:p-10 mb-24">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10">
+          <h2 className="font-serif text-3xl font-light text-white">
+            AI Studio
+          </h2>
+          <Link
+            href="/contact"
+            className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 mt-2 md:mt-0"
+          >
+            Talk to the studio
+          </Link>
+        </div>
 
-          <div className="relative z-10 animate-reveal-up" style={{ animationDelay: "0.2s" }}>
-            <h3 className="text-3xl text-white font-serif font-light mb-4">Coming Soon</h3>
-            <p className="text-[var(--fg-muted)] max-w-xl mx-auto leading-relaxed">
-              Our dedicated AI Studio is currently under development. Stay tuned for innovative tools and services that blend artificial intelligence with cinematic storytelling.
-            </p>
-            <div className="mt-8">
-              <button className="btn-primary px-8 py-3 text-sm font-semibold tracking-widest uppercase">
-                Notify Me
-              </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI films and ads</h3>
+            <p className="text-[#9CA3AF] text-sm">Concept, script, AI production and edit for brand films and commercials.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI visuals and campaigns</h3>
+            <p className="text-[#9CA3AF] text-sm">Posters, product shots and social content in one consistent look.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">AI + live action</h3>
+            <p className="text-[#9CA3AF] text-sm">Shoot on set, extend with AI. Backgrounds, VFX and extra shots.</p>
+          </div>
+          <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
+            <h3 className="text-white text-lg font-medium mb-2">Training and consulting</h3>
+            <p className="text-[#9CA3AF] text-sm">Help your team start using AI tools in creative work.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-white text-lg font-medium mb-4">How it works</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Brief</h4>
+              <p className="text-[#9CA3AF] text-xs">You share the idea and goal.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Concept</h4>
+              <p className="text-[#9CA3AF] text-xs">Script, style and storyboard.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Create</h4>
+              <p className="text-[#9CA3AF] text-xs">AI production with our directors.</p>
+            </div>
+            <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
+              <h4 className="text-[var(--accent)] font-medium mb-1">Deliver</h4>
+              <p className="text-[#9CA3AF] text-xs">Final edit, sound and formats.</p>
             </div>
           </div>
         </div>
