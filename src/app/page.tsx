@@ -6,6 +6,7 @@ import SafeImage from "@/components/SafeImage";
 import Image from "next/image";
 import Link from "next/link";
 import { featuredFilms } from "@/app/featured-work/data";
+import AIWorkClient from "@/app/ai-work/AIWorkClient";
 import { teamMembers } from "@/app/team/data";
 import { pressItems } from "@/app/media/press/data";
 import {
@@ -824,6 +825,9 @@ export default function Home() {
         </div>
         <div className="absolute bottom-0 left-0 right-0 h-px divider-gradient opacity-60" />
       </section>
+
+      {/* ——— AI WORK ——— */}
+      <AIWorkClient />
 
       {/* ——— AWARDS ——— */}
       <section
