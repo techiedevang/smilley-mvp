@@ -64,7 +64,8 @@ export default function AIWorkClient() {
 
   return (
     <div className="pt-32 pb-24 px-6 md:px-12 mx-auto max-w-7xl min-h-screen">
-      <div className="text-center mb-10 animate-reveal-up">
+      {/* Desktop/Tablet Header Section */}
+      <div className="hidden md:block text-center mb-10 animate-reveal-up">
         <h1 className="font-serif text-4xl md:text-5xl font-light text-white mb-6">
           AI <span className="text-gradient">Work</span>
         </h1>
@@ -96,6 +97,31 @@ export default function AIWorkClient() {
             AI Studio
           </button>
         </div>
+      </div>
+
+      {/* Mobile Hero Layout */}
+      <div className="block md:hidden mb-12 animate-reveal-up">
+        <h1 className="font-serif text-2xl font-semibold text-white mb-8">
+          Stories made with AI, directed by us.
+        </h1>
+
+        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-[var(--bg-card)] border border-dashed border-white/20 mb-4 group cursor-pointer">
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 mb-2 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(255,215,0,0.5)]">
+                <Play size={20} fill="currentColor" className="ml-1" />
+              </div>
+              <span className="text-[10px] text-[var(--fg-muted)] font-medium">AI showreel</span>
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href="/ai-project"
+          className="btn-primary px-6 py-2 rounded-full text-xs font-semibold tracking-wide inline-block"
+        >
+          See AI projects
+        </Link>
       </div>
 
       <section id="project" ref={projectRef} className="mb-24 scroll-mt-32">
@@ -135,7 +161,7 @@ export default function AIWorkClient() {
           ))}
         </div>
 
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div layout className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           <AnimatePresence>
             {filteredProjects.map((project, index) => (
               <motion.div
@@ -160,14 +186,14 @@ export default function AIWorkClient() {
                     </div>
                   </div>
                 </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-white text-lg font-medium">{project.title}</h3>
-                    <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--accent)] px-2 py-0.5 rounded-full bg-[var(--accent)]/10">
+                <div className="p-3 md:p-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between mb-1 gap-1 md:gap-0">
+                    <h3 className="text-white text-sm md:text-lg font-medium truncate">{project.title}</h3>
+                    <span className="text-[8px] md:text-[10px] uppercase tracking-wider font-semibold text-[var(--accent)] px-1.5 py-0.5 rounded-full bg-[var(--accent)]/10 w-fit">
                       {project.category}
                     </span>
                   </div>
-                  <p className="text-[var(--fg-muted)] text-sm">{project.description}</p>
+                  <p className="text-[var(--fg-muted)] text-xs md:text-sm line-clamp-2 md:line-clamp-none">{project.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -182,7 +208,7 @@ export default function AIWorkClient() {
           </h2>
           <Link
             href="/ai-studio"
-            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group"
+            className="text-sm font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-2 group hidden md:flex"
           >
             See All AI Studio
             <svg
@@ -194,8 +220,13 @@ export default function AIWorkClient() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </Link>
+          <div className="md:hidden text-xs text-[var(--fg-muted)] mt-1">
+            AI films and ads | AI visuals | more
+          </div>
         </div>
-        <div className="relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 md:p-16 text-center group">
+
+        {/* Desktop/Tablet AI Studio Block */}
+        <div className="hidden md:block relative overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-8 md:p-16 text-center group">
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           <div className="relative z-10 animate-reveal-up" style={{ animationDelay: "0.2s" }}>
@@ -209,6 +240,23 @@ export default function AIWorkClient() {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Mobile AI Studio Block Layout (from Reference) */}
+        <div className="md:hidden flex flex-col gap-3">
+          <div className="border border-[var(--border)] bg-white/5 rounded-md p-6 text-center">
+            <h3 className="text-xl text-white font-serif font-light mb-3">Coming Soon</h3>
+            <p className="text-[var(--fg-muted)] text-sm leading-relaxed mb-4">
+              Our dedicated AI Studio is currently under development. Stay tuned for innovative tools and services that blend artificial intelligence with cinematic storytelling.
+            </p>
+            <button className="bg-[var(--accent)] text-black px-6 py-2 text-xs font-semibold tracking-widest uppercase rounded">
+              Notify Me
+            </button>
+          </div>
+
+          <Link href="/#contact" className="mt-2 text-center w-full bg-[var(--accent)] text-black py-4 rounded-md font-semibold text-sm tracking-wide block">
+            Start a project
+          </Link>
         </div>
       </section>
     </div>

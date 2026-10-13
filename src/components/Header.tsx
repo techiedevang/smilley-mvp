@@ -194,74 +194,70 @@ export default function Header() {
           </div>
         </button>
 
-        {/* Mobile menu — slide in from right, full height */}
+        {/* Mobile menu — full screen overlay */}
         <AnimatePresence>
           {menuOpen && (
-            <>
-              {/* Backdrop — tap to close */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                onClick={() => setMenuOpen(false)}
-                className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm lg:hidden"
-                aria-hidden
-              />
-              {/* Panel from right */}
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{
-                  type: "tween",
-                  duration: 0.35,
-                  ease: [0.23, 1, 0.32, 1],
-                }}
-                className="fixed top-0 right-0 bottom-0 z-[95] h-screen w-[min(320px,85vw)] bg-[var(--bg)] border-l border-[var(--border)] shadow-2xl flex flex-col lg:hidden overflow-y-auto"
-              >
-                <div className="flex flex-col items-stretch pt-24 pb-8 px-6">
-                  <nav
-                    className="flex flex-col gap-1"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {navLinks.map((item, i) => (
-                      <motion.div
-                        key={item.href}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.05 + 0.1 }}
-                      >
-                        <Link
-                          href={item.href!}
-                          className={`block py-3 font-serif text-xl font-light transition-colors border-b border-white/5 ${
-                            isActive(item.href!, item.anchor)
-                              ? "text-[var(--accent)]"
-                              : "text-white hover:text-[var(--accent)]"
-                          }`}
-                        >
-                          {item.label}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </nav>
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="mt-8"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <Link
-                      href="/#contact"
-                      className="btn-primary w-full justify-center px-8 py-4 text-xs font-semibold tracking-widest uppercase inline-flex"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[110] bg-[var(--bg)] flex flex-col lg:hidden overflow-y-auto"
+            >
+              {/* Header inside menu */}
+              <div className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)]">
+                <Link href="/" className="flex items-center gap-3" onClick={() => setMenuOpen(false)}>
+                  <div className="relative h-9 w-20 flex-shrink-0">
+                    <Image
+                      src="/images/logo.png"
+                      alt="Smiley Films"
+                      fill
+                      className="object-contain object-left"
+                      sizes="80px"
+                      priority
+                    />
+                  </div>
+                </Link>
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white"
+                  aria-label="Close menu"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Navigation links */}
+              <div className="flex-1 flex flex-col pt-12 px-10 pb-8">
+                <nav
+                  className="flex flex-col gap-8"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {navLinks.map((item, i) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 + 0.1 }}
                     >
-                      Start a conversation
-                    </Link>
-                  </motion.div>
-                </div>
-              </motion.div>
-            </>
+                      <Link
+                        href={item.href!}
+                        className={`block text-sm tracking-widest uppercase transition-colors ${
+                          isActive(item.href!, item.anchor)
+                            ? "text-[var(--accent)] font-semibold"
+                            : "text-white/80 hover:text-white font-medium"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </header>
