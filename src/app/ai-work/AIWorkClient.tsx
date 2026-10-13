@@ -7,7 +7,6 @@ import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIWorkClient() {
-  const [filter, setFilter] = useState("All");
   const [activeSection, setActiveSection] = useState("project");
 
   const projectRef = useRef<HTMLElement>(null);
@@ -47,8 +46,6 @@ export default function AIWorkClient() {
     }
   };
 
-  const filters = ["All", "Latest", "Popular"];
-
   const aiProjects = [
     { title: "Project 1", description: "AI Generated Short Film", category: "Latest", image: "/images/placeholder-poster.svg" },
     { title: "Project 2", description: "AI Visual Effects", category: "Popular", image: "/images/placeholder-poster.svg" },
@@ -57,10 +54,6 @@ export default function AIWorkClient() {
     { title: "Project 5", description: "AI Sound Design", category: "Latest", image: "/images/placeholder-poster.svg" },
     { title: "Project 6", description: "AI Color Grading", category: "Popular", image: "/images/placeholder-poster.svg" },
   ];
-
-  const filteredProjects = filter === "All"
-    ? aiProjects
-    : aiProjects.filter((p) => p.category === filter);
 
   return (
     <div className="pt-32 pb-24 px-6 md:px-12 mx-auto max-w-7xl min-h-screen">
@@ -119,25 +112,9 @@ export default function AIWorkClient() {
           </Link>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 ${
-                filter === f
-                  ? "bg-[var(--accent)] text-black"
-                  : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
-            {filteredProjects.map((project, index) => (
+            {aiProjects.map((project, index) => (
               <motion.div
                 key={project.title}
                 layout

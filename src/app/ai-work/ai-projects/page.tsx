@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AIProjectsPage() {
-  const [filter, setFilter] = useState("All");
-
-  const filters = ["All", "Latest", "Popular"];
-
   const aiProjects = [
     { title: "Project 1", description: "AI Generated Short Film", category: "Latest", image: "/images/placeholder-poster.svg" },
     { title: "Project 2", description: "AI Visual Effects", category: "Popular", image: "/images/placeholder-poster.svg" },
@@ -19,37 +15,16 @@ export default function AIProjectsPage() {
     { title: "Project 6", description: "AI Color Grading", category: "Popular", image: "/images/placeholder-poster.svg" },
   ];
 
-  const filteredProjects = filter === "All"
-    ? aiProjects
-    : aiProjects.filter((p) => p.category === filter);
-
   return (
     <div>
       <section className="mb-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[var(--border)] pb-4 mb-8">
-          <h2 className="font-serif text-3xl font-light text-white mb-4 md:mb-0">
-            AI Projects
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {filters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 ${
-                  filter === f
-                    ? "bg-[#FFD700] text-black"
-                    : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-        </div>
+        <h2 className="font-serif text-3xl font-light text-white mb-8 border-b border-[var(--border)] pb-4">
+          AI Projects
+        </h2>
 
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence>
-            {filteredProjects.map((project) => (
+            {aiProjects.map((project) => (
               <motion.div
                 key={project.title}
                 layout
