@@ -6,55 +6,11 @@ import Link from "next/link";
 import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
+import { aiProjects } from "@/app/ai-work/data";
 
 export default function AIProjectClient() {
   const [filter, setFilter] = useState("All");
   const filters = ["All", "Films", "Ads", "Music videos", "Visuals"];
-
-  const aiProjects = [
-    {
-      title: "The Society",
-      description: "Fashion & Lifestyle, 2026 | AI Commercial",
-      category: "Ads",
-      image: "/images/ai-projects/still-1.jpeg",
-      objectPosition: "object-[center_28%]",
-    },
-    {
-      title: "The Revelation",
-      description: "Suspense Drama, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-2.jpeg",
-      objectPosition: "object-[center_30%]",
-    },
-    {
-      title: "Electric Soul",
-      description: "Cinematic Music Video, 2026 | Music Video",
-      category: "Music videos",
-      image: "/images/ai-projects/still-3.jpeg",
-      objectPosition: "object-[center_32%]",
-    },
-    {
-      title: "Dynasty",
-      description: "Period Romance, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-4.jpeg",
-      objectPosition: "object-[center_42%]",
-    },
-    {
-      title: "Sanctuary",
-      description: "Wellness & Drama, 2026 | Visuals",
-      category: "Visuals",
-      image: "/images/ai-projects/still-5.jpeg",
-      objectPosition: "object-[center_35%]",
-    },
-    {
-      title: "Shadow Manor",
-      description: "Gothic Thriller, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-6.jpeg",
-      objectPosition: "object-[center_50%]",
-    },
-  ];
 
   const filteredProjects = filter === "All"
     ? aiProjects
@@ -108,7 +64,7 @@ export default function AIProjectClient() {
           <AnimatePresence>
             {filteredProjects.map((project, index) => (
               <motion.div
-                key={project.title}
+                key={project.id || project.title}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}

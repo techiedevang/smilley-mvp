@@ -7,6 +7,8 @@ import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SafeImage from "@/components/SafeImage";
 
+import { aiProjects } from "./data";
+
 function LightbulbIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -65,50 +67,7 @@ export default function AIWorkClient() {
     }
   };
 
-  const aiProjects = [
-    {
-      title: "The Society",
-      description: "Fashion & Lifestyle, 2026 | AI Commercial",
-      category: "Ads",
-      image: "/images/ai-projects/still-1.jpeg",
-      objectPosition: "object-[center_28%]",
-    },
-    {
-      title: "The Revelation",
-      description: "Suspense Drama, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-2.jpeg",
-      objectPosition: "object-[center_30%]",
-    },
-    {
-      title: "Electric Soul",
-      description: "Cinematic Music Video, 2026 | Music Video",
-      category: "Music videos",
-      image: "/images/ai-projects/still-3.jpeg",
-      objectPosition: "object-[center_32%]",
-    },
-    {
-      title: "Dynasty",
-      description: "Period Romance, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-4.jpeg",
-      objectPosition: "object-[center_42%]",
-    },
-    {
-      title: "Sanctuary",
-      description: "Wellness & Drama, 2026 | Visuals",
-      category: "Visuals",
-      image: "/images/ai-projects/still-5.jpeg",
-      objectPosition: "object-[center_35%]",
-    },
-    {
-      title: "Shadow Manor",
-      description: "Gothic Thriller, 2026 | AI Film",
-      category: "Films",
-      image: "/images/ai-projects/still-6.jpeg",
-      objectPosition: "object-[center_50%]",
-    },
-  ];
+  const featuredAIProjects = aiProjects.slice(0, 6);
 
   return (
     <section
@@ -267,9 +226,9 @@ export default function AIWorkClient() {
           {/* Grid: Desktop 3 items per line x 2 lines (6 total). Mobile 1 item per line x 3 items total */}
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence>
-              {aiProjects.map((project, index) => (
+              {featuredAIProjects.map((project, index) => (
                 <motion.div
-                  key={project.title + index}
+                  key={project.id || project.title}
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
