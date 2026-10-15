@@ -81,32 +81,56 @@ export default function AIWorkClient() {
       <div className="absolute top-0 left-0 right-0 h-px divider-gradient opacity-60" />
 
       <div className="mx-auto max-w-6xl">
-        {/* Top Hero: Left-aligned Text & Toggle + Right Video with matching height */}
+        {/* Centered Section Header — matching Featured Work & Awards */}
+        <div className="text-center mb-16 animate-reveal-up">
+          {/* Bulb icon at the center (like the trophy in Awards) */}
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.7,
+              delay: 0.15,
+              type: "spring",
+              stiffness: 200,
+            }}
+            className="inline-flex items-center justify-center w-14 h-14 mb-6 relative"
+          >
+            <div className="absolute inset-0 rounded-full bg-[var(--accent)]/10 ring-1 ring-[var(--accent)]/30" />
+            <LightbulbIcon className="w-6 h-6 text-[var(--accent)] relative z-10" />
+          </motion.div>
+
+          {/* Eyebrow Label with lines (like Showcase in Featured Work) */}
+          <div>
+            <span className="section-label">Innovation</span>
+          </div>
+
+          {/* Heading — AI Work (matching Featured Work) */}
+          <h2 className="mt-4 font-serif text-4xl md:text-5xl lg:text-6xl font-light text-white">
+            AI <span className="text-gradient">Work</span>
+          </h2>
+
+          {/* Accent divider line */}
+          <div className="mt-6 w-16 h-0.5 bg-gradient-to-r from-[var(--accent)] to-transparent mx-auto" />
+        </div>
+
+        {/* Two-Column Row: Left-aligned large text & toggle + Right matching height video */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-20 animate-reveal-up">
-          {/* Left Column: Left-aligned Heading, Subtitle, and Toggle */}
+          {/* Left Column: Left-aligned Large Tagline and Toggle */}
           <div className="lg:col-span-7 flex flex-col justify-between text-left">
             <div>
-              {/* Innovation Eyebrow with Bulb SVG Icon */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30 mb-5">
-                <LightbulbIcon className="w-4 h-4 text-[var(--accent)]" />
-                <span className="text-[var(--accent)] text-[11px] font-bold tracking-[0.25em] uppercase">
-                  Innovation
-                </span>
-              </div>
-
-              {/* Main Heading — styled same as Featured Work & Awards */}
-              <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-[1.1] tracking-tight">
-                Innovation <span className="text-gradient">AI</span>
-              </h2>
-
-              {/* Subtitle */}
-              <p className="text-[var(--fg-muted)] text-base sm:text-lg leading-relaxed mt-4 max-w-xl">
-                Stories made with AI, directed by us.
+              {/* Increased Text Size Tagline */}
+              <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
+                Stories made with AI,{" "}
+                <span className="text-[var(--accent)] font-normal">directed by us.</span>
+              </h3>
+              <p className="text-[var(--fg-muted)] text-base sm:text-lg leading-relaxed mt-4 max-w-lg">
+                Blending generative tools and cutting-edge artificial intelligence with authentic cinematic storytelling.
               </p>
             </div>
 
-            {/* Sub-navigation Toggle right under text */}
-            <div className="mt-8 pt-4">
+            {/* Sub-navigation Toggle underneath text */}
+            <div className="mt-8 pt-2">
               <div className="bg-[var(--bg)]/90 backdrop-blur-md p-1 rounded-full border border-[var(--border)] inline-flex shadow-lg">
                 <button
                   onClick={() => scrollToSection("ai-project-section")}
