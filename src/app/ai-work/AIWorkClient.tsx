@@ -6,6 +6,24 @@ import Link from "next/link";
 import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+function LightbulbIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+    </svg>
+  );
+}
+
 export default function AIWorkClient() {
   const [activeSection, setActiveSection] = useState("project");
 
@@ -63,45 +81,88 @@ export default function AIWorkClient() {
       <div className="absolute top-0 left-0 right-0 h-px divider-gradient opacity-60" />
 
       <div className="mx-auto max-w-6xl">
-        {/* Section Header */}
-        <div className="text-center mb-12 animate-reveal-up">
-          <span className="text-[var(--accent)] text-sm font-medium tracking-widest uppercase">
-            Innovation
-          </span>
-          <h2 className="mt-3 font-serif text-4xl md:text-5xl font-light text-white mb-4">
-            AI <span className="text-gradient">Work</span>
-          </h2>
-          <p className="text-[var(--fg-muted)] leading-relaxed max-w-2xl mx-auto">
-            Exploring the frontiers of storytelling with artificial intelligence.
-          </p>
-        </div>
+        {/* Top Hero: Left-aligned Text & Toggle + Right Video with matching height */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-20 animate-reveal-up">
+          {/* Left Column: Left-aligned Heading, Subtitle, and Toggle */}
+          <div className="lg:col-span-7 flex flex-col justify-between text-left">
+            <div>
+              {/* Innovation Eyebrow with Bulb SVG Icon */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30 mb-5">
+                <LightbulbIcon className="w-4 h-4 text-[var(--accent)]" />
+                <span className="text-[var(--accent)] text-[11px] font-bold tracking-[0.25em] uppercase">
+                  Innovation
+                </span>
+              </div>
 
-        {/* Sticky Sub-navigation Toggle */}
-        <div
-          className="flex justify-center mb-16 sticky top-[90px] md:top-[100px] z-40 animate-reveal-up"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <div className="bg-[var(--bg)]/90 backdrop-blur-md p-1 rounded-full border border-[var(--border)] inline-flex shadow-lg">
-            <button
-              onClick={() => scrollToSection("ai-project-section")}
-              className={`px-6 py-2 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
-                activeSection === "project"
-                  ? "bg-[var(--accent)] text-black font-semibold"
-                  : "text-[var(--fg-muted)] hover:text-white"
-              }`}
-            >
-              AI Project
-            </button>
-            <button
-              onClick={() => scrollToSection("ai-studio-section")}
-              className={`px-6 py-2 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
-                activeSection === "studio"
-                  ? "bg-[var(--accent)] text-black font-semibold"
-                  : "text-[var(--fg-muted)] hover:text-white"
-              }`}
-            >
-              AI Studio
-            </button>
+              {/* Main Heading — styled same as Featured Work & Awards */}
+              <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-[1.1] tracking-tight">
+                Innovation <span className="text-gradient">AI</span>
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-[var(--fg-muted)] text-base sm:text-lg leading-relaxed mt-4 max-w-xl">
+                Stories made with AI, directed by us.
+              </p>
+            </div>
+
+            {/* Sub-navigation Toggle right under text */}
+            <div className="mt-8 pt-4">
+              <div className="bg-[var(--bg)]/90 backdrop-blur-md p-1 rounded-full border border-[var(--border)] inline-flex shadow-lg">
+                <button
+                  onClick={() => scrollToSection("ai-project-section")}
+                  className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
+                    activeSection === "project"
+                      ? "bg-[var(--accent)] text-black font-semibold"
+                      : "text-[var(--fg-muted)] hover:text-white"
+                  }`}
+                >
+                  AI Project
+                </button>
+                <button
+                  onClick={() => scrollToSection("ai-studio-section")}
+                  className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
+                    activeSection === "studio"
+                      ? "bg-[var(--accent)] text-black font-semibold"
+                      : "text-[var(--fg-muted)] hover:text-white"
+                  }`}
+                >
+                  AI Studio
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Video with matching height */}
+          <div className="lg:col-span-5 flex">
+            <div className="relative w-full h-full min-h-[260px] md:min-h-[300px] rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--bg-card)] group shadow-2xl flex flex-col justify-end">
+              <Image
+                src="/images/chidiya-1920x1080.webp"
+                alt="AI Showcase Video"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
+
+              {/* Centered Play Button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_30px_rgba(192,57,43,0.6)] group-hover:scale-110 transition-transform cursor-pointer">
+                  <Play size={24} fill="currentColor" className="ml-1" />
+                </div>
+              </div>
+
+              {/* Bottom Video Badge & Info */}
+              <div className="relative z-10 p-4 sm:p-5 flex items-center justify-between text-xs text-white/90">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
+                  <span className="font-semibold tracking-wider uppercase text-[10px] text-white">
+                    AI Showreel
+                  </span>
+                </div>
+                <span className="text-[11px] font-mono text-white/70 bg-black/60 px-2 py-0.5 rounded-md border border-white/10">
+                  01:45
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
