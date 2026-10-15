@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import SafeImage from "@/components/SafeImage";
 
 function LightbulbIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -65,12 +66,48 @@ export default function AIWorkClient() {
   };
 
   const aiProjects = [
-    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
-    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
-    { title: "Project title", description: "Client name, year | Music video", category: "Music videos", image: "/images/placeholder-poster.svg" },
-    { title: "Project title", description: "Client name, year | AI film", category: "Films", image: "/images/placeholder-poster.svg" },
-    { title: "Project title", description: "Client name, year | Visuals", category: "Visuals", image: "/images/placeholder-poster.svg" },
-    { title: "Project title", description: "Client name, year | AI ad", category: "Ads", image: "/images/placeholder-poster.svg" },
+    {
+      title: "The Society",
+      description: "Fashion & Lifestyle, 2026 | AI Commercial",
+      category: "Ads",
+      image: "/images/ai-projects/still-1.jpeg",
+      objectPosition: "object-[center_28%]",
+    },
+    {
+      title: "The Revelation",
+      description: "Suspense Drama, 2026 | AI Film",
+      category: "Films",
+      image: "/images/ai-projects/still-2.jpeg",
+      objectPosition: "object-[center_30%]",
+    },
+    {
+      title: "Electric Soul",
+      description: "Cinematic Music Video, 2026 | Music Video",
+      category: "Music videos",
+      image: "/images/ai-projects/still-3.jpeg",
+      objectPosition: "object-[center_32%]",
+    },
+    {
+      title: "Dynasty",
+      description: "Period Romance, 2026 | AI Film",
+      category: "Films",
+      image: "/images/ai-projects/still-4.jpeg",
+      objectPosition: "object-[center_42%]",
+    },
+    {
+      title: "Sanctuary",
+      description: "Wellness & Drama, 2026 | Visuals",
+      category: "Visuals",
+      image: "/images/ai-projects/still-5.jpeg",
+      objectPosition: "object-[center_35%]",
+    },
+    {
+      title: "Shadow Manor",
+      description: "Gothic Thriller, 2026 | AI Film",
+      category: "Films",
+      image: "/images/ai-projects/still-6.jpeg",
+      objectPosition: "object-[center_50%]",
+    },
   ];
 
   return (
@@ -242,24 +279,24 @@ export default function AIWorkClient() {
                     index >= 3 ? "hidden md:block" : ""
                   }`}
                 >
-                  <div className="relative aspect-video overflow-hidden">
-                    <Image
+                  <div className="relative aspect-video overflow-hidden bg-[var(--bg-card)]">
+                    <SafeImage
                       src={project.image}
                       alt={project.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className={`object-cover ${project.objectPosition || "object-center"} transition-transform duration-700 group-hover:scale-105`}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={index < 3}
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300">
-                      <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-lg">
-                        <Play size={20} fill="currentColor" className="ml-1" />
+                    {/* Hover overlay with play button — completely transparent by default for crystal clear image */}
+                    <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                      <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(192,57,43,0.6)] transform group-hover:scale-110 transition-transform duration-300">
+                        <Play size={20} fill="currentColor" className="ml-0.5" />
                       </div>
-                    </div>
-                    <div className="absolute bottom-4 left-0 right-0 text-center text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {`Project ${index + 1}: thumbnail or video`}
                     </div>
                   </div>
                   <div className="p-4 bg-[var(--bg-card)]">
-                    <h4 className="text-white text-md font-medium mb-1">{project.title}</h4>
+                    <h4 className="text-white text-md font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">{project.title}</h4>
                     <p className="text-[var(--fg-muted)] text-xs">{project.description}</p>
                   </div>
                 </motion.div>
