@@ -80,9 +80,17 @@ export default function AIWorkClient() {
     >
       <div className="absolute top-0 left-0 right-0 h-px divider-gradient opacity-60" />
 
-      <div className="mx-auto max-w-6xl">
+      {/* Dramatic background glow — light red blended with dark black like in Awards */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] md:w-[900px] h-[400px] rounded-full bg-[var(--accent)]/10 blur-[150px]" />
+      </div>
+
+      <div className="mx-auto max-w-6xl relative">
         {/* Centered Section Header — matching Featured Work & Awards */}
-        <div className="text-center mb-16 animate-reveal-up">
+        <div className="text-center mb-16 animate-reveal-up relative">
+          {/* Ambient glow directly behind heading — light red over black */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-44 w-full max-w-2xl mx-auto bg-[var(--accent)]/18 blur-[85px] pointer-events-none rounded-full" />
+
           {/* Bulb icon at the center (like the trophy in Awards) */}
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
