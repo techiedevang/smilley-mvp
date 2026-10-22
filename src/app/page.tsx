@@ -826,7 +826,7 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-px divider-gradient opacity-60" />
       </section>
 
-      {/* ——— AI WORK ——— */}
+      {/* ——— AI STUDIO ——— */}
       <AIWorkClient />
 
       {/* ——— AWARDS ——— */}

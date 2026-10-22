@@ -1,99 +1,134 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import SafeImage from "@/components/SafeImage";
-import { aiProjects } from "@/app/ai-work/data";
+import {
+  projects,
+  CATEGORY_FILTERS,
+  type FilterCategory,
+} from "@/data/projects";
 
 export default function AIProjectClient() {
-  const [filter, setFilter] = useState("All");
-  const filters = ["All", "Films", "Ads", "Music videos", "Visuals"];
+  const [filter, setFilter] = useState<FilterCategory>("All");
 
-  const filteredProjects = filter === "All"
-    ? aiProjects
-    : aiProjects.filter((p) => p.category === filter);
+  const availableFilters = useMemo(
+    () => CATEGORY_FILTERS.filter((f) => f.enabled),
+    [],
+  );
+
+  const filteredProjects = useMemo(() => {
+    return projects.filter((p) => {
+      if (p.enabled === false) return false;
+      if (filter === "All") return true;
+      return p.category === filter;
+    });
+  }, [filter]);
 
   return (
     <div className="pt-32 pb-24 px-6 md:px-12 mx-auto max-w-7xl min-h-screen">
       <div className="mb-12 animate-reveal-up">
-        <Link href="/ai-work" className="inline-flex items-center gap-2 text-[var(--fg-muted)] hover:text-white transition-colors duration-300 mb-6 group">
+        <Link
+          href="/#ai-studio"
+          className="inline-flex items-center gap-2 text-[var(--fg-muted)] hover:text-white transition-colors duration-300 mb-6 group"
+        >
           <svg
             className="w-4 h-4 group-hover:-translate-x-1 transition-transform"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
-          <span className="text-sm tracking-wider uppercase font-medium">Back to AI Work</span>
+          <span className="text-sm tracking-wider uppercase font-medium">
+            Back to AI Studio
+          </span>
         </Link>
 
         <div className="flex flex-col md:flex-row md:items-start justify-between mb-2">
           <div>
-            <h1 className="font-serif text-3xl font-light text-white mb-2">
-              AI Projects
+            <h1 className="font-serif text-3xl md:text-4xl font-light text-white mb-2">
+              AI Studio Projects
             </h1>
-            <p className="text-[var(--fg-muted)] text-sm mb-6">
-              A selection of work made with AI tools, from concept to final cut.
+            <p className="text-[var(--fg-muted)] text-sm mb-6 max-w-2xl">
+              We produce AI-driven fiction shows, films, AVs, ad films, and branded content, combining creative direction with emerging AI technologies to bring stories to life on screen.
             </p>
           </div>
         </div>
       </div>
 
       <section className="mb-24 mt-4">
+        {/* Filter Tabs */}
         <div className="flex flex-wrap gap-2 mb-8 border-b border-[var(--border)] pb-8">
-          {filters.map((f) => (
+          {availableFilters.map((tab) => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 ${
-                filter === f
-                  ? "bg-[var(--accent)] text-black"
+              key={tab.key}
+              onClick={() => setFilter(tab.key)}
+              className={`px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider transition-colors duration-300 cursor-pointer ${
+                filter === tab.key
+                  ? "bg-[var(--accent)] text-black font-semibold"
                   : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white"
               }`}
             >
-              {f}
+              {tab.label}
             </button>
           ))}
         </div>
 
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Project Grid */}
+        <motion.div
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           <AnimatePresence>
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id || project.title}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="group cursor-pointer rounded-lg overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors"
-              >
-                <div className="relative aspect-video overflow-hidden bg-[var(--bg-card)]">
-                  <SafeImage
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className={`object-cover ${project.objectPosition || "object-center"} transition-transform duration-700 group-hover:scale-105`}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority={index < 3}
-                  />
-                  {/* Hover overlay with play button — completely transparent by default for crystal clear image */}
-                  <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                    <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(192,57,43,0.6)] transform group-hover:scale-110 transition-transform duration-300">
-                      <Play size={20} fill="currentColor" className="ml-0.5" />
+            {filteredProjects.map((project, index) => {
+              const still = project.stills[0];
+              return (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="group rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors shadow-lg flex flex-col justify-between"
+                >
+                  <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-black/40">
+                    {still && (
+                      <Image
+                        src={still.src}
+                        alt={still.alt}
+                        fill
+                        className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index < 3}
+                      />
+                    )}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
+                        {project.category}
+                      </span>
                     </div>
                   </div>
-                </div>
-                <div className="p-4 bg-[var(--bg-card)]">
-                  <h3 className="text-white text-md font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">{project.title}</h3>
-                  <p className="text-[var(--fg-muted)] text-xs">{project.description}</p>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="p-5">
+                    <h3 className="text-white text-lg sm:text-xl font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    {project.client && (
+                      <p className="text-[var(--fg-muted)] text-xs tracking-wider uppercase font-medium">
+                        Client: <span className="text-white/90">{project.client}</span>
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
       </section>

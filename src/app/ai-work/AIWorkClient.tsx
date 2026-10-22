@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Play } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import SafeImage from "@/components/SafeImage";
-
-import { aiProjects } from "./data";
+import {
+  projects,
+  CATEGORY_FILTERS,
+  type FilterCategory,
+} from "@/data/projects";
 
 function LightbulbIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -28,66 +30,106 @@ function LightbulbIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 export default function AIWorkClient() {
-  const [activeSection, setActiveSection] = useState("project");
+  const [selectedCategory, setSelectedCategory] =
+    useState<FilterCategory>("All");
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [selectedStillByProject, setSelectedStillByProject] = useState<
+    Record<string, number>
+  >({});
 
-  const projectRef = useRef<HTMLDivElement>(null);
-  const studioRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!projectRef.current || !studioRef.current) return;
-
-      const headerOffset = 180;
-      const studioRect = studioRef.current.getBoundingClientRect();
-
-      if (studioRect.top <= headerOffset + 200) {
-        setActiveSection("studio");
-      } else {
-        setActiveSection("project");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
+  // Available category filters (Ad Films has enabled: false and is turned OFF)
+  const availableFilters = useMemo(() => {
+    return CATEGORY_FILTERS.filter((f) => f.enabled);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const headerOffset = 140;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  // Filtered projects (excluding any with enabled: false, e.g. Ad Films dummy)
+  const displayedProjects = useMemo(() => {
+    return projects.filter((p) => {
+      if (p.enabled === false) return false;
+      if (selectedCategory === "All") return true;
+      return p.category === selectedCategory;
+    });
+  }, [selectedCategory]);
 
-      window.scrollTo({
-        top: offsetPosition,
+  // Reset slider scroll when filter changes
+  useEffect(() => {
+    setActiveSlideIndex(0);
+    if (sliderRef.current) {
+      sliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  }, [selectedCategory]);
+
+  const scrollToSlide = (index: number) => {
+    const slider = sliderRef.current;
+    if (!slider || displayedProjects.length === 0) return;
+    const targetIndex = Math.max(0, Math.min(index, displayedProjects.length - 1));
+    const child = slider.children[targetIndex] as HTMLElement;
+    if (child) {
+      slider.scrollTo({
+        left: child.offsetLeft - slider.offsetLeft,
         behavior: "smooth",
       });
+      setActiveSlideIndex(targetIndex);
     }
   };
 
-  const featuredAIProjects = aiProjects.slice(0, 6);
+  const handlePrev = () => {
+    scrollToSlide(activeSlideIndex - 1);
+  };
+
+  const handleNext = () => {
+    scrollToSlide(activeSlideIndex + 1);
+  };
+
+  const onSliderScroll = () => {
+    const slider = sliderRef.current;
+    if (!slider || !slider.children.length) return;
+    const scrollLeft = slider.scrollLeft;
+    let closestIndex = 0;
+    let minDistance = Infinity;
+
+    Array.from(slider.children).forEach((child, idx) => {
+      const el = child as HTMLElement;
+      const distance = Math.abs(el.offsetLeft - slider.offsetLeft - scrollLeft);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = idx;
+      }
+    });
+
+    setActiveSlideIndex(closestIndex);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      handlePrev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      handleNext();
+    }
+  };
 
   return (
     <section
-      id="ai-work"
+      id="ai-studio"
       className="py-24 md:py-36 px-6 md:px-12 scroll-mt-24 relative overflow-hidden"
     >
       <div className="absolute top-0 left-0 right-0 h-px divider-gradient opacity-60" />
 
-      {/* Dramatic background glow — light red blended with dark black like in Awards */}
+      {/* Dramatic ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] md:w-[900px] h-[400px] rounded-full bg-[var(--accent)]/10 blur-[150px]" />
       </div>
 
       <div className="mx-auto max-w-6xl relative">
-        {/* Centered Section Header — matching Featured Work & Awards */}
+        {/* Centered Section Header */}
         <div className="text-center mb-16 animate-reveal-up relative">
-          {/* Ambient glow directly behind heading — light red over black */}
           <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-44 w-full max-w-2xl mx-auto bg-[var(--accent)]/18 blur-[85px] pointer-events-none rounded-full" />
 
-          {/* Bulb icon at the center (like the trophy in Awards) */}
+          {/* Centered Bulb Icon */}
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
@@ -104,196 +146,231 @@ export default function AIWorkClient() {
             <LightbulbIcon className="w-6 h-6 text-[var(--accent)] relative z-10" />
           </motion.div>
 
-          {/* Eyebrow Label with lines (like Showcase in Featured Work) */}
+          {/* Eyebrow Label */}
           <div>
             <span className="section-label">Innovation</span>
           </div>
 
-          {/* Heading — AI Work (matching Featured Work) */}
+          {/* Renamed Heading: AI Studio */}
           <h2 className="mt-4 font-serif text-4xl md:text-5xl lg:text-6xl font-light text-white">
-            AI <span className="text-gradient">Work</span>
+            AI <span className="text-gradient">Studio</span>
           </h2>
 
           {/* Accent divider line */}
           <div className="mt-6 w-16 h-0.5 bg-gradient-to-r from-[var(--accent)] to-transparent mx-auto" />
+
+          {/* Tagline directly underneath the AI Studio heading */}
+          <p className="mt-6 max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-[var(--fg-muted)] font-light leading-relaxed">
+            We produce AI-driven fiction shows, films, AVs, ad films, and branded content, combining creative direction with emerging AI technologies to bring stories to life on screen.
+          </p>
         </div>
 
-        {/* Two-Column Row: Left-aligned large text & toggle + Right matching height video */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch mb-20 animate-reveal-up">
-          {/* Left Column: Left-aligned Large Tagline and Toggle */}
-          <div className="lg:col-span-7 flex flex-col justify-between text-left">
-            <div>
-              {/* Increased Text Size Tagline */}
-              <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
-                Stories made with AI,{" "}
-                <span className="text-[var(--accent)] font-normal">directed by us.</span>
-              </h3>
-              <p className="text-[var(--fg-muted)] text-base sm:text-lg leading-relaxed mt-4 max-w-lg">
-                Blending generative tools and cutting-edge artificial intelligence with authentic cinematic storytelling.
-              </p>
-            </div>
-
-            {/* Sub-navigation Toggle underneath text */}
-            <div className="mt-8 pt-2">
-              <div className="bg-[var(--bg)]/90 backdrop-blur-md p-1 rounded-full border border-[var(--border)] inline-flex shadow-lg">
-                <button
-                  onClick={() => scrollToSection("ai-project-section")}
-                  className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
-                    activeSection === "project"
-                      ? "bg-[var(--accent)] text-black font-semibold"
-                      : "text-[var(--fg-muted)] hover:text-white"
-                  }`}
-                >
-                  AI Project
-                </button>
-                <button
-                  onClick={() => scrollToSection("ai-studio-section")}
-                  className={`px-6 py-2.5 rounded-full text-xs md:text-sm font-medium uppercase tracking-wider transition-colors duration-300 ${
-                    activeSection === "studio"
-                      ? "bg-[var(--accent)] text-black font-semibold"
-                      : "text-[var(--fg-muted)] hover:text-white"
-                  }`}
-                >
-                  AI Studio
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Video with matching height */}
-          <div className="lg:col-span-5 flex">
-            <div className="relative w-full h-full min-h-[260px] md:min-h-[300px] rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--bg-card)] group shadow-2xl flex flex-col justify-end">
-              <Image
-                src="/images/chidiya-1920x1080.webp"
-                alt="AI Showcase Video"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
-
-              {/* Centered Play Button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_30px_rgba(192,57,43,0.6)] group-hover:scale-110 transition-transform cursor-pointer">
-                  <Play size={24} fill="currentColor" className="ml-1" />
-                </div>
-              </div>
-
-              {/* Bottom Video Badge & Info */}
-              <div className="relative z-10 p-4 sm:p-5 flex items-center justify-between text-xs text-white/90">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
-                  <span className="font-semibold tracking-wider uppercase text-[10px] text-white">
-                    AI Showreel
-                  </span>
-                </div>
-                <span className="text-[11px] font-mono text-white/70 bg-black/60 px-2 py-0.5 rounded-md border border-white/10">
-                  01:45
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Projects Subsection */}
-        <div id="ai-project-section" ref={projectRef} className="mb-24 scroll-mt-36">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-[var(--border)] pb-6">
-            <div>
-              <h3 className="font-serif text-3xl font-light text-white mb-2">
-                AI Projects
-              </h3>
-              <p className="text-[var(--fg-muted)] text-sm">
-                A selection of work made with AI tools, from concept to final cut.
-              </p>
-            </div>
-
-            {/* Desktop View All link (hidden on mobile) */}
-            <Link
-              href="/ai-project"
-              className="hidden md:flex text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 items-center gap-1 group mt-2 md:mt-0"
+        {/* Portfolio Filter Tabs & Slider Section */}
+        <div className="mb-24">
+          {/* Header row: Filter tabs on left, Arrows on right */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-[var(--border)] pb-6">
+            {/* Filter Tabs */}
+            <div
+              className="flex flex-wrap items-center gap-2"
+              role="tablist"
+              aria-label="Filter AI Studio projects by category"
             >
-              View all AI projects
-              <svg
-                className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              {availableFilters.map((tab) => {
+                const isActive = selectedCategory === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setSelectedCategory(tab.key)}
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)]"
+                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Slider Arrow Navigation */}
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={activeSlideIndex === 0}
+                aria-label="Previous slide"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 disabled:opacity-25 disabled:pointer-events-none cursor-pointer shadow-md"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={activeSlideIndex >= displayedProjects.length - 1}
+                aria-label="Next slide"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 disabled:opacity-25 disabled:pointer-events-none cursor-pointer shadow-md"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
-          {/* Grid: Desktop 3 items per line x 2 lines (6 total). Mobile 1 item per line x 3 items total */}
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <AnimatePresence>
-              {featuredAIProjects.map((project, index) => (
-                <motion.div
-                  key={project.id || project.title}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  className={`group cursor-pointer rounded-lg overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors ${
-                    index >= 3 ? "hidden md:block" : ""
-                  }`}
+          {/* Carousel / Slider Container */}
+          <div
+            ref={sliderRef}
+            onScroll={onSliderScroll}
+            onKeyDown={onKeyDown}
+            tabIndex={0}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="AI Studio Projects Slider"
+            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 pt-2 -mx-2 px-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]/50 rounded-xl"
+            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+          >
+            {displayedProjects.map((project, index) => {
+              const currentStillIdx = selectedStillByProject[project.id] ?? 0;
+              const currentStill =
+                project.stills[currentStillIdx] || project.stills[0];
+
+              return (
+                <div
+                  key={project.id}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${index + 1} of ${displayedProjects.length}: ${project.title}`}
+                  className="flex-shrink-0 w-[86vw] sm:w-[70vw] md:w-[46%] lg:w-[31.5%] snap-start group"
                 >
-                  <div className="relative aspect-video overflow-hidden bg-[var(--bg-card)]">
-                    <SafeImage
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className={`object-cover ${project.objectPosition || "object-center"} transition-transform duration-700 group-hover:scale-105`}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      priority={index < 3}
-                    />
-                    {/* Hover overlay with play button — completely transparent by default for crystal clear image */}
-                    <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                      <div className="w-12 h-12 rounded-full bg-[var(--accent)] flex items-center justify-center text-black shadow-[0_0_20px_rgba(192,57,43,0.6)] transform group-hover:scale-110 transition-transform duration-300">
-                        <Play size={20} fill="currentColor" className="ml-0.5" />
+                  <div className="bg-[var(--bg-card)] rounded-2xl overflow-hidden border border-[var(--border)] hover:border-[var(--accent)]/40 transition-all duration-300 flex flex-col h-full shadow-lg hover:shadow-2xl">
+                    {/* Main Project Still */}
+                    <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full overflow-hidden bg-[#0A0D14]">
+                      {currentStill && (
+                        <Image
+                          src={currentStill.src}
+                          alt={currentStill.alt}
+                          fill
+                          sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
+                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                          priority={index < 2}
+                        />
+                      )}
+
+                      {/* Top badge */}
+                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                        <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
+                          {project.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Stills Gallery Selector (if project has multiple stills) */}
+                    {project.stills.length > 1 && (
+                      <div className="px-4 pt-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
+                        <span className="text-[10px] text-[var(--fg-muted)] tracking-wider uppercase font-medium mr-1 flex-shrink-0">
+                          Stills:
+                        </span>
+                        {project.stills.map((still, sIdx) => (
+                          <button
+                            key={sIdx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedStillByProject((prev) => ({
+                                ...prev,
+                                [project.id]: sIdx,
+                              }));
+                            }}
+                            aria-label={`View still ${sIdx + 1} of ${project.title}`}
+                            className={`relative w-10 h-10 rounded-md overflow-hidden border transition-all flex-shrink-0 cursor-pointer ${
+                              sIdx === currentStillIdx
+                                ? "border-[var(--accent)] scale-105 shadow-sm ring-1 ring-[var(--accent)]"
+                                : "border-white/10 opacity-60 hover:opacity-100"
+                            }`}
+                          >
+                            <Image
+                              src={still.src}
+                              alt={still.alt}
+                              fill
+                              sizes="40px"
+                              className="object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Information Area */}
+                    <div className="p-5 flex flex-col flex-grow justify-between">
+                      <div>
+                        <h3 className="font-serif text-xl sm:text-2xl font-light text-white group-hover:text-[var(--accent)] transition-colors duration-300">
+                          {project.title}
+                        </h3>
+                        {project.client && (
+                          <p className="text-xs text-[var(--fg-muted)] tracking-wider uppercase font-medium mt-1.5">
+                            Client: <span className="text-white/90">{project.client}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 bg-[var(--bg-card)]">
-                    <h4 className="text-white text-md font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">{project.title}</h4>
-                    <p className="text-[var(--fg-muted)] text-xs">{project.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                </div>
+              );
+            })}
+          </div>
 
-          {/* Mobile View All link (aligned right at the very bottom of AI projects) */}
-          <div className="flex md:hidden justify-end mt-6">
+          {/* Slider Pagination Dots */}
+          <div
+            className="flex justify-center items-center gap-2 mt-8"
+            role="tablist"
+            aria-label="Project slide navigation"
+          >
+            {displayedProjects.map((p, idx) => (
+              <button
+                key={p.id}
+                type="button"
+                role="tab"
+                aria-selected={idx === activeSlideIndex}
+                aria-label={`Go to slide ${idx + 1}: ${p.title}`}
+                onClick={() => scrollToSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  idx === activeSlideIndex
+                    ? "w-8 bg-[var(--accent)]"
+                    : "w-2 bg-white/20 hover:bg-white/50"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Contact Button linking to Contact Us section */}
+          <div className="mt-12 text-center">
             <Link
-              href="/ai-project"
-              className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-1 group"
+              href="/#contact"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-light)] text-black px-8 py-4 rounded-xl font-semibold text-base tracking-wide transition-all shadow-[0_0_25px_rgba(192,57,43,0.35)] hover:shadow-[0_0_35px_rgba(192,57,43,0.5)] transform hover:-translate-y-0.5 cursor-pointer"
             >
-              View all AI projects
+              Have an idea? Let’s make it.
               <svg
-                className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"
+                className="w-4 h-4 ml-1"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>
-
-          {/* Banner: Have an idea? Let’s make it. */}
-          <Link
-            href="#contact"
-            className="block w-full bg-[var(--accent)] hover:bg-[var(--accent-light)] text-black text-center py-4 px-6 rounded-xl font-semibold text-base md:text-lg tracking-wide transition-all mt-8 shadow-[0_0_25px_rgba(192,57,43,0.35)] cursor-pointer"
-          >
-            Have an idea? Let’s make it.
-          </Link>
         </div>
 
         {/* AI Studio Subsection */}
         <div
           id="ai-studio-section"
-          ref={studioRef}
           className="scroll-mt-36 bg-[#0B0F19] rounded-xl border border-[var(--border)] p-6 md:p-10 mb-12"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
@@ -301,9 +378,9 @@ export default function AIWorkClient() {
               AI Studio
             </h3>
 
-            {/* Desktop Talk to the studio link (hidden on mobile) */}
+            {/* Talk to the studio link */}
             <Link
-              href="#contact"
+              href="/#contact"
               className="hidden md:flex text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 items-center gap-1 group mt-2 md:mt-0"
             >
               Talk to the studio
@@ -313,32 +390,46 @@ export default function AIWorkClient() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
             <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">AI films and ads</h4>
+              <h4 className="text-white text-lg font-medium mb-2">
+                AI films and ads
+              </h4>
               <p className="text-[#9CA3AF] text-sm">
-                Concept, script, AI production and edit for brand films and commercials.
+                Concept, script, AI production and edit for brand films and
+                commercials.
               </p>
             </div>
             <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">AI visuals and campaigns</h4>
+              <h4 className="text-white text-lg font-medium mb-2">
+                AI visuals and campaigns
+              </h4>
               <p className="text-[#9CA3AF] text-sm">
                 Posters, product shots and social content in one consistent look.
               </p>
             </div>
             <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">AI + live action</h4>
+              <h4 className="text-white text-lg font-medium mb-2">
+                AI + live action
+              </h4>
               <p className="text-[#9CA3AF] text-sm">
                 Shoot on set, extend with AI. Backgrounds, VFX and extra shots.
               </p>
             </div>
             <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">Training and consulting</h4>
+              <h4 className="text-white text-lg font-medium mb-2">
+                Training and consulting
+              </h4>
               <p className="text-[#9CA3AF] text-sm">
                 Help your team start using AI tools in creative work.
               </p>
@@ -367,10 +458,10 @@ export default function AIWorkClient() {
             </div>
           </div>
 
-          {/* Mobile Talk to the studio link (aligned right at the very bottom of AI Studio) */}
+          {/* Mobile Talk to the studio link */}
           <div className="flex md:hidden justify-end mt-8">
             <Link
-              href="#contact"
+              href="/#contact"
               className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-1 group"
             >
               Talk to the studio
@@ -380,7 +471,12 @@ export default function AIWorkClient() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </Link>
           </div>

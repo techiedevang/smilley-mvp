@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { href: "/", label: "Home", anchor: "home" },
   { href: "/#featured-work", label: "Featured Work", anchor: "featured-work" },
-  { href: "/#ai-work", label: "AI Work", anchor: "ai-work" },
+  { href: "/#ai-studio", label: "AI Studio", anchor: "ai-studio" },
   { href: "/#awards", label: "Awards", anchor: "awards" },
   { href: "/#about", label: "About Us", anchor: "about" },
   { href: "/#team", label: "Team", anchor: "team" },
@@ -19,7 +19,7 @@ const navLinks = [
 const SECTION_IDS = [
   "home",
   "featured-work",
-  "ai-work",
+  "ai-studio",
   "awards",
   "about",
   "team",
@@ -102,7 +102,7 @@ export default function Header() {
   const isActive = (href: string, anchor: string | null) => {
     if (pathname !== "/") {
       if (href === "/") return pathname === "/";
-      if (pathname === "/ai-work" && (href === "/#ai-work" || href === "/ai-work")) return true;
+      if ((pathname === "/ai-studio" || pathname === "/ai-work") && (href === "/#ai-studio" || href === "/ai-studio" || href === "/#ai-work" || href === "/ai-work")) return true;
       if (pathname === "/team" && href === "/#team") return true;
       if (pathname === "/press" && href === "/#press") return true;
       return false;
