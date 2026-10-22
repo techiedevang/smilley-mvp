@@ -65,12 +65,27 @@ export default function AIWorkClient() {
   const scrollToSlide = (index: number) => {
     const slider = sliderRef.current;
     if (!slider || displayedProjects.length === 0) return;
-    const targetIndex =
-      (index + displayedProjects.length) % displayedProjects.length;
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+    const isAtEnd = slider.scrollLeft >= maxScroll - 15;
+
+    let targetIndex = index;
+    if (targetIndex >= displayedProjects.length || (targetIndex > activeSlideIndex && isAtEnd)) {
+      targetIndex = 0;
+    } else if (targetIndex < 0) {
+      targetIndex = displayedProjects.length - 1;
+    }
+
     const child = slider.children[targetIndex] as HTMLElement;
     if (child) {
+      const targetLeft =
+        targetIndex === 0
+          ? 0
+          : targetIndex === displayedProjects.length - 1
+          ? maxScroll
+          : Math.min(child.offsetLeft - slider.offsetLeft, maxScroll);
+
       slider.scrollTo({
-        left: child.offsetLeft - slider.offsetLeft,
+        left: targetLeft,
         behavior: "smooth",
       });
       setActiveSlideIndex(targetIndex);
@@ -78,39 +93,79 @@ export default function AIWorkClient() {
   };
 
   const handlePrev = () => {
-    scrollToSlide(activeSlideIndex - 1);
+    const slider = sliderRef.current;
+    if (slider && slider.scrollLeft <= 15) {
+      scrollToSlide(displayedProjects.length - 1);
+    } else {
+      scrollToSlide(activeSlideIndex - 1);
+    }
   };
 
   const handleNext = () => {
-    scrollToSlide(activeSlideIndex + 1);
+    const slider = sliderRef.current;
+    const maxScroll = slider ? slider.scrollWidth - slider.clientWidth : 0;
+    if (slider && slider.scrollLeft >= maxScroll - 15) {
+      scrollToSlide(0);
+    } else {
+      scrollToSlide(activeSlideIndex + 1);
+    }
   };
 
-  // Auto-slide carousel at a proper interval (4 seconds)
+  // Auto-slide carousel at a brisk interval (2.5 seconds)
+  // When last image is reached, the very next slide wraps directly back to first slide
   useEffect(() => {
     if (isPaused || displayedProjects.length <= 1) return;
 
     const timer = setInterval(() => {
-      setActiveSlideIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % displayedProjects.length;
-        const slider = sliderRef.current;
-        if (slider && slider.children[nextIndex]) {
-          const child = slider.children[nextIndex] as HTMLElement;
-          slider.scrollTo({
-            left: child.offsetLeft - slider.offsetLeft,
-            behavior: "smooth",
-          });
-        }
-        return nextIndex;
-      });
-    }, 4000);
+      const slider = sliderRef.current;
+      if (!slider) return;
+
+      const maxScroll = slider.scrollWidth - slider.clientWidth;
+      const isAtEnd = slider.scrollLeft >= maxScroll - 15;
+
+      let nextIndex = 0;
+      if (isAtEnd || activeSlideIndex >= displayedProjects.length - 1) {
+        nextIndex = 0;
+      } else {
+        nextIndex = activeSlideIndex + 1;
+      }
+
+      const child = slider.children[nextIndex] as HTMLElement;
+      if (child) {
+        const targetLeft =
+          nextIndex === 0
+            ? 0
+            : nextIndex === displayedProjects.length - 1
+            ? maxScroll
+            : Math.min(child.offsetLeft - slider.offsetLeft, maxScroll);
+
+        slider.scrollTo({
+          left: targetLeft,
+          behavior: "smooth",
+        });
+        setActiveSlideIndex(nextIndex);
+      }
+    }, 2500);
 
     return () => clearInterval(timer);
-  }, [isPaused, displayedProjects.length]);
+  }, [isPaused, displayedProjects.length, activeSlideIndex]);
 
   const onSliderScroll = () => {
     const slider = sliderRef.current;
     if (!slider || !slider.children.length) return;
     const scrollLeft = slider.scrollLeft;
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    if (scrollLeft >= maxScroll - 15) {
+      setActiveSlideIndex(displayedProjects.length - 1);
+      return;
+    }
+
+    if (scrollLeft <= 15) {
+      setActiveSlideIndex(0);
+      return;
+    }
+
     let closestIndex = 0;
     let minDistance = Infinity;
 
@@ -220,17 +275,13 @@ export default function AIWorkClient() {
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    disabled={isDisabled}
                     onClick={() => {
                       if (!isDisabled) setSelectedCategory(tab.key);
                     }}
-                    title={isDisabled ? "Ad Films (Coming Soon)" : undefined}
-                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 ${
-                      isDisabled
-                        ? "bg-white/5 text-[var(--fg-dim)] border border-white/5 cursor-not-allowed opacity-50"
-                        : isActive
-                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)] cursor-pointer"
-                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5 cursor-pointer"
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)]"
+                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5"
                     }`}
                   >
                     {tab.label}
