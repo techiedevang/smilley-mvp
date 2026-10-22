@@ -43,7 +43,7 @@ import signed3 from "../../Stills For AI Projects/Signed and Bound/Screenshot 20
 // Feature Films: Purpose of Wow
 import purposeOfWowImg from "../../Stills For AI Projects/purpose of wow.jpeg";
 
-// Ad Shows: AI commercial still
+// Ad Films: AI commercial still
 import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
 
 // ---------------------------------------------------------------------------
@@ -52,7 +52,7 @@ import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
 
 export type ProjectCategory =
   | "Vertical Dramas"
-  | "Ad Shows"
+  | "Ad Films"
   | "Narrative Shows"
   | "Feature Films";
 
@@ -62,12 +62,13 @@ export interface CategoryFilterConfig {
   key: FilterCategory;
   label: string;
   enabled: boolean;
+  disabled?: boolean;
 }
 
 export const CATEGORY_FILTERS: CategoryFilterConfig[] = [
   { key: "All", label: "All", enabled: true },
   { key: "Vertical Dramas", label: "Vertical Dramas", enabled: true },
-  { key: "Ad Shows", label: "Ad Shows", enabled: true },
+  { key: "Ad Films", label: "Ad Films", enabled: true, disabled: true },
   { key: "Narrative Shows", label: "Narrative Shows", enabled: true },
   { key: "Feature Films", label: "Feature Films", enabled: true },
 ];
@@ -184,14 +185,14 @@ export const projects: Project[] = [
     ],
   },
 
-  // --- Ad Shows (1 AI commercial still) ---
+  // --- Ad Films (AI commercial still, disabled tab) ---
   {
-    id: "ad-show",
-    title: "Ad Show",
-    category: "Ad Shows",
-    enabled: true,
+    id: "ad-film",
+    title: "Ad Film",
+    category: "Ad Films",
+    enabled: false,
     stills: [
-      { src: adShowImg, alt: "Ad Show commercial still" },
+      { src: adShowImg, alt: "Ad Film commercial still" },
     ],
   },
 ];

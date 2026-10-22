@@ -33,6 +33,7 @@ export default function AIWorkClient() {
   const [selectedCategory, setSelectedCategory] =
     useState<FilterCategory>("All");
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [selectedStillByProject, setSelectedStillByProject] = useState<
     Record<string, number>
   >({});
@@ -64,7 +65,8 @@ export default function AIWorkClient() {
   const scrollToSlide = (index: number) => {
     const slider = sliderRef.current;
     if (!slider || displayedProjects.length === 0) return;
-    const targetIndex = Math.max(0, Math.min(index, displayedProjects.length - 1));
+    const targetIndex =
+      (index + displayedProjects.length) % displayedProjects.length;
     const child = slider.children[targetIndex] as HTMLElement;
     if (child) {
       slider.scrollTo({
@@ -82,6 +84,28 @@ export default function AIWorkClient() {
   const handleNext = () => {
     scrollToSlide(activeSlideIndex + 1);
   };
+
+  // Auto-slide carousel at a proper interval (4 seconds)
+  useEffect(() => {
+    if (isPaused || displayedProjects.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setActiveSlideIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % displayedProjects.length;
+        const slider = sliderRef.current;
+        if (slider && slider.children[nextIndex]) {
+          const child = slider.children[nextIndex] as HTMLElement;
+          slider.scrollTo({
+            left: child.offsetLeft - slider.offsetLeft,
+            behavior: "smooth",
+          });
+        }
+        return nextIndex;
+      });
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [isPaused, displayedProjects.length]);
 
   const onSliderScroll = () => {
     const slider = sliderRef.current;
@@ -189,17 +213,24 @@ export default function AIWorkClient() {
             >
               {availableFilters.map((tab) => {
                 const isActive = selectedCategory === tab.key;
+                const isDisabled = Boolean(tab.disabled);
                 return (
                   <button
                     key={tab.key}
                     type="button"
                     role="tab"
                     aria-selected={isActive}
-                    onClick={() => setSelectedCategory(tab.key)}
-                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 cursor-pointer ${
-                      isActive
-                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)]"
-                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5"
+                    disabled={isDisabled}
+                    onClick={() => {
+                      if (!isDisabled) setSelectedCategory(tab.key);
+                    }}
+                    title={isDisabled ? "Ad Films (Coming Soon)" : undefined}
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 ${
+                      isDisabled
+                        ? "bg-white/5 text-[var(--fg-dim)] border border-white/5 cursor-not-allowed opacity-50"
+                        : isActive
+                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)] cursor-pointer"
+                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5 cursor-pointer"
                     }`}
                   >
                     {tab.label}
@@ -213,18 +244,16 @@ export default function AIWorkClient() {
               <button
                 type="button"
                 onClick={handlePrev}
-                disabled={activeSlideIndex === 0}
                 aria-label="Previous slide"
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 disabled:opacity-25 disabled:pointer-events-none cursor-pointer shadow-md"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-md"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 type="button"
                 onClick={handleNext}
-                disabled={activeSlideIndex >= displayedProjects.length - 1}
                 aria-label="Next slide"
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 disabled:opacity-25 disabled:pointer-events-none cursor-pointer shadow-md"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-md"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -236,6 +265,10 @@ export default function AIWorkClient() {
             ref={sliderRef}
             onScroll={onSliderScroll}
             onKeyDown={onKeyDown}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
             tabIndex={0}
             role="region"
             aria-roledescription="carousel"
@@ -247,6 +280,14 @@ export default function AIWorkClient() {
               const currentStillIdx = selectedStillByProject[project.id] ?? 0;
               const currentStill =
                 project.stills[currentStillIdx] || project.stills[0];
+
+              const isLandscape =
+                project.id === "purpose-of-wow" ||
+                (currentStill &&
+                  currentStill.src &&
+                  currentStill.src.width &&
+                  currentStill.src.height &&
+                  currentStill.src.width / currentStill.src.height > 1.2);
 
               return (
                 <div
@@ -260,14 +301,40 @@ export default function AIWorkClient() {
                     {/* Main Project Still */}
                     <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full overflow-hidden bg-[#0A0D14]">
                       {currentStill && (
-                        <Image
-                          src={currentStill.src}
-                          alt={currentStill.alt}
-                          fill
-                          sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
-                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                          priority={index < 2}
-                        />
+                        isLandscape ? (
+                          <div className="relative w-full h-full">
+                            {/* Blurred background backdrop filling the card letterbox area */}
+                            <Image
+                              src={currentStill.src}
+                              alt=""
+                              fill
+                              className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
+                              aria-hidden
+                            />
+                            <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
+
+                            {/* Full landscape image fitted properly with object-contain */}
+                            <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                              <Image
+                                src={currentStill.src}
+                                alt={currentStill.alt}
+                                fill
+                                sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
+                                className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
+                                priority={index < 2}
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <Image
+                            src={currentStill.src}
+                            alt={currentStill.alt}
+                            fill
+                            sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
+                            className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                            priority={index < 2}
+                          />
+                        )
                       )}
 
                       {/* Top badge */}

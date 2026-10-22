@@ -89,6 +89,14 @@ export default function AIProjectClient() {
           <AnimatePresence>
             {filteredProjects.map((project, index) => {
               const still = project.stills[0];
+              const isLandscape =
+                project.id === "purpose-of-wow" ||
+                (still &&
+                  still.src &&
+                  still.src.width &&
+                  still.src.height &&
+                  still.src.width / still.src.height > 1.2);
+
               return (
                 <motion.div
                   key={project.id}
@@ -101,14 +109,40 @@ export default function AIProjectClient() {
                 >
                   <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-black/40">
                     {still && (
-                      <Image
-                        src={still.src}
-                        alt={still.alt}
-                        fill
-                        className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        priority={index < 3}
-                      />
+                      isLandscape ? (
+                        <div className="relative w-full h-full">
+                          {/* Blurred background backdrop filling the letterbox area */}
+                          <Image
+                            src={still.src}
+                            alt=""
+                            fill
+                            className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
+                            aria-hidden
+                          />
+                          <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
+
+                          {/* Full landscape image fitted properly with object-contain */}
+                          <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                            <Image
+                              src={still.src}
+                              alt={still.alt}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
+                              priority={index < 3}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <Image
+                          src={still.src}
+                          alt={still.alt}
+                          fill
+                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          priority={index < 3}
+                        />
+                      )
                     )}
                     <div className="absolute top-3 left-3 z-10">
                       <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
