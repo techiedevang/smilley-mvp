@@ -43,8 +43,8 @@ import signed3 from "../../Stills For AI Projects/Signed and Bound/Screenshot 20
 // Feature Films: Purpose of Wow
 import purposeOfWowImg from "../../Stills For AI Projects/purpose of wow.jpeg";
 
-// Ad Films: Dummy card using single photo from Stills For AI Projects
-import adFilmImg from "../../Stills For AI Projects/Beyond the Prism/Frame (1).png";
+// Ad Shows: AI commercial still
+import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
 
 // ---------------------------------------------------------------------------
 // Types & Categories
@@ -52,7 +52,7 @@ import adFilmImg from "../../Stills For AI Projects/Beyond the Prism/Frame (1).p
 
 export type ProjectCategory =
   | "Vertical Dramas"
-  | "Ad Films"
+  | "Ad Shows"
   | "Narrative Shows"
   | "Feature Films";
 
@@ -67,7 +67,7 @@ export interface CategoryFilterConfig {
 export const CATEGORY_FILTERS: CategoryFilterConfig[] = [
   { key: "All", label: "All", enabled: true },
   { key: "Vertical Dramas", label: "Vertical Dramas", enabled: true },
-  { key: "Ad Films", label: "Ad Films", enabled: false }, // Turned OFF by default
+  { key: "Ad Shows", label: "Ad Shows", enabled: true },
   { key: "Narrative Shows", label: "Narrative Shows", enabled: true },
   { key: "Feature Films", label: "Feature Films", enabled: true },
 ];
@@ -184,14 +184,14 @@ export const projects: Project[] = [
     ],
   },
 
-  // --- Ad Films (dummy card with neutral title, no client, turned OFF) ---
+  // --- Ad Shows (1 AI commercial still) ---
   {
-    id: "ad-film",
-    title: "Ad Film",
-    category: "Ad Films",
-    enabled: false, // Controlled by this flag
+    id: "ad-show",
+    title: "Ad Show",
+    category: "Ad Shows",
+    enabled: true,
     stills: [
-      { src: adFilmImg, alt: "Ad Film still" },
+      { src: adShowImg, alt: "Ad Show commercial still" },
     ],
   },
 ];

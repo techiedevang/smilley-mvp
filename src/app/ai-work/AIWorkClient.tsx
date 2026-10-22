@@ -39,12 +39,12 @@ export default function AIWorkClient() {
 
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Available category filters (Ad Films has enabled: false and is turned OFF)
+  // Available category filters
   const availableFilters = useMemo(() => {
     return CATEGORY_FILTERS.filter((f) => f.enabled);
   }, []);
 
-  // Filtered projects (excluding any with enabled: false, e.g. Ad Films dummy)
+  // Filtered projects based on selectedCategory
   const displayedProjects = useMemo(() => {
     return projects.filter((p) => {
       if (p.enabled === false) return false;
@@ -166,7 +166,7 @@ export default function AIWorkClient() {
         </div>
 
         {/* Portfolio Filter Tabs & Slider Section */}
-        <div className="mb-24">
+        <div>
           {/* Header row: Filter tabs on left, Arrows on right */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-[var(--border)] pb-6">
             {/* Filter Tabs */}
@@ -353,120 +353,6 @@ export default function AIWorkClient() {
               Have an idea? Let’s make it.
               <svg
                 className="w-4 h-4 ml-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </Link>
-          </div>
-        </div>
-
-        {/* AI Studio Subsection */}
-        <div
-          id="ai-studio-section"
-          className="scroll-mt-36 bg-[#0B0F19] rounded-xl border border-[var(--border)] p-6 md:p-10 mb-12"
-        >
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
-            <h3 className="font-serif text-3xl font-light text-white">
-              AI Studio
-            </h3>
-
-            {/* Talk to the studio link */}
-            <Link
-              href="/#contact"
-              className="hidden md:flex text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 items-center gap-1 group mt-2 md:mt-0"
-            >
-              Talk to the studio
-              <svg
-                className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-            <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">
-                AI films and ads
-              </h4>
-              <p className="text-[#9CA3AF] text-sm">
-                Concept, script, AI production and edit for brand films and
-                commercials.
-              </p>
-            </div>
-            <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">
-                AI visuals and campaigns
-              </h4>
-              <p className="text-[#9CA3AF] text-sm">
-                Posters, product shots and social content in one consistent look.
-              </p>
-            </div>
-            <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">
-                AI + live action
-              </h4>
-              <p className="text-[#9CA3AF] text-sm">
-                Shoot on set, extend with AI. Backgrounds, VFX and extra shots.
-              </p>
-            </div>
-            <div className="border border-[#1F2937] bg-[#111827]/50 rounded-lg p-6 hover:bg-[#111827] transition-colors">
-              <h4 className="text-white text-lg font-medium mb-2">
-                Training and consulting
-              </h4>
-              <p className="text-[#9CA3AF] text-sm">
-                Help your team start using AI tools in creative work.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-white text-lg font-medium mb-4">How it works</h4>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
-                <h5 className="text-[var(--accent)] font-medium mb-1">Brief</h5>
-                <p className="text-[#9CA3AF] text-xs">You share the idea and goal.</p>
-              </div>
-              <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
-                <h5 className="text-[var(--accent)] font-medium mb-1">Concept</h5>
-                <p className="text-[#9CA3AF] text-xs">Script, style and storyboard.</p>
-              </div>
-              <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
-                <h5 className="text-[var(--accent)] font-medium mb-1">Create</h5>
-                <p className="text-[#9CA3AF] text-xs">AI production with our directors.</p>
-              </div>
-              <div className="border border-[#1F2937] bg-[#111827]/30 rounded-lg p-5">
-                <h5 className="text-[var(--accent)] font-medium mb-1">Deliver</h5>
-                <p className="text-[#9CA3AF] text-xs">Final edit, sound and formats.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Talk to the studio link */}
-          <div className="flex md:hidden justify-end mt-8">
-            <Link
-              href="/#contact"
-              className="text-xs font-semibold tracking-widest uppercase text-[var(--accent)] hover:text-white transition-colors duration-300 flex items-center gap-1 group"
-            >
-              Talk to the studio
-              <svg
-                className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
