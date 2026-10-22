@@ -119,15 +119,23 @@ export default function AIWorkClient() {
     >
       <div className="absolute top-0 left-0 right-0 h-px divider-gradient opacity-60" />
 
-      {/* Dramatic ambient glow */}
+      {/* Dramatic background — matching Awards */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] md:w-[900px] h-[400px] rounded-full bg-[var(--accent)]/10 blur-[150px]" />
+        <div className="absolute inset-0 bg-black via-transparent" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-[var(--gold)]/4 blur-[150px]" />
       </div>
 
       <div className="mx-auto max-w-6xl relative">
-        {/* Centered Section Header */}
-        <div className="text-center mb-16 animate-reveal-up relative">
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-44 w-full max-w-2xl mx-auto bg-[var(--accent)]/18 blur-[85px] pointer-events-none rounded-full" />
+        {/* Section header — cinematic dark matching Awards */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
+          className="text-center mb-16 relative"
+        >
+          {/* Ambient glow behind heading — red to match theme, exact same as Awards */}
+          <div className="absolute inset-x-0 top-24 md:top-28 -translate-y-1/2 h-40 bg-[var(--accent)]/8 blur-[80px] pointer-events-none rounded-full" />
 
           {/* Centered Bulb Icon */}
           <motion.div
@@ -146,13 +154,17 @@ export default function AIWorkClient() {
             <LightbulbIcon className="w-6 h-6 text-[var(--accent)] relative z-10" />
           </motion.div>
 
-          {/* Eyebrow Label */}
-          <div>
-            <span className="section-label">Innovation</span>
+          {/* Eyebrow Label matching Awards */}
+          <div className="flex items-center justify-center gap-5 mb-5">
+            <div className="h-px w-20 bg-gradient-to-r from-transparent to-[var(--accent)]/60" />
+            <span className="text-[var(--accent)] text-[10px] font-bold tracking-[0.45em] uppercase">
+              Innovation
+            </span>
+            <div className="h-px w-20 bg-gradient-to-l from-transparent to-[var(--accent)]/60" />
           </div>
 
           {/* Renamed Heading: AI Studio */}
-          <h2 className="mt-4 font-serif text-4xl md:text-5xl lg:text-6xl font-light text-white">
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-white">
             AI <span className="text-gradient">Studio</span>
           </h2>
 
@@ -163,7 +175,7 @@ export default function AIWorkClient() {
           <p className="mt-6 max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-[var(--fg-muted)] font-light leading-relaxed">
             We produce AI-driven fiction shows, films, AVs, ad films, and branded content, combining creative direction with emerging AI technologies to bring stories to life on screen.
           </p>
-        </div>
+        </motion.div>
 
         {/* Portfolio Filter Tabs & Slider Section */}
         <div>
