@@ -13,13 +13,13 @@ export default function ProjectDetail({ project }: { project: Project }) {
   const [selectedStillIndex, setSelectedStillIndex] = useState(0);
   const currentStill = project.stills[selectedStillIndex] || project.stills[0];
 
-  const isLandscape =
-    project.id === "purpose-of-wow" ||
-    (currentStill &&
+  const isLandscape = Boolean(
+    currentStill &&
       currentStill.src &&
       currentStill.src.width &&
       currentStill.src.height &&
-      currentStill.src.width / currentStill.src.height > 1.2);
+      currentStill.src.width / currentStill.src.height > 1.2
+  );
 
   const otherProjects = projects.filter(
     (p) => p.id !== project.id && p.enabled !== false

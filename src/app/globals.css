@@ -1135,6 +1135,19 @@ button {
   animation-play-state: paused;
 }
 
+/* AI Studio Continuous Strip */
+.ai-strip-track {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+
+.ai-strip-track:hover {
+  animation-play-state: paused;
+}
+
 /* ================================
    NUMBER COUNTER HIGHLIGHT
    ================================ */
@@ -1203,6 +1216,7 @@ button {
   .animate-float-fab,
   .marquee-track,
   .awards-marquee-track,
+  .ai-strip-track,
   .film-grain,
   .film-line,
   .spotlight,

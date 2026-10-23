@@ -30,7 +30,8 @@ import signed1 from "../../Stills For AI Projects/Signed and Bound/File 002.png"
 import signed2 from "../../Stills For AI Projects/Signed and Bound/file_00000000516482109ca6bae9bdda4ee2.png";
 
 // Feature Films: Purpose of Wow
-import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose of wow.jpeg";
+import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose-of-wow-portrait.jpg";
+import purposeOfWowLandscape from "../../Stills For AI Projects/Purpose of Wow/purpose of wow.jpeg";
 
 // Ad Films: AI commercial still
 import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
@@ -192,21 +193,22 @@ export const projects: Project[] = [
     ],
   },
 
-  // --- Feature Films (no client specified) ---
+  // --- Feature Films ---
   {
     id: "purpose-of-wow",
     title: "Purpose of Wow",
-    // No client specified; do not invent one
+    client: "In-House Production",
     category: "Feature Films",
     enabled: true,
-    format: "Cinematic Feature Film (16:9 Widescreen)",
+    format: "Cinematic Feature Film",
     year: "2024",
     genre: "Cinematic / Drama",
     direction: "Smiley Films",
     synopsis:
-      "A breathtaking widescreen cinematic journey tracing the pursuit of wonder, human passion, and extraordinary life moments that reveal true purpose on the grand canvas.",
+      "A breathtaking cinematic journey tracing the pursuit of wonder, human passion, and extraordinary life moments that reveal true purpose on the grand canvas.",
     stills: [
-      { src: purposeOfWowImg, alt: "Purpose of Wow still" },
+      { src: purposeOfWowImg, alt: "Purpose of Wow portrait still" },
+      { src: purposeOfWowLandscape, alt: "Purpose of Wow title still" },
     ],
   },
 

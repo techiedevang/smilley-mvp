@@ -45,6 +45,11 @@ export default function AIWorkClient() {
     return CATEGORY_FILTERS.filter((f) => f.enabled);
   }, []);
 
+  // All active projects for the continuous moving image strip
+  const stripProjects = useMemo(() => {
+    return projects.filter((p) => p.enabled !== false);
+  }, []);
+
   // Filtered projects based on selectedCategory
   const displayedProjects = useMemo(() => {
     return projects.filter((p) => {
@@ -256,6 +261,91 @@ export default function AIWorkClient() {
           </p>
         </motion.div>
 
+        {/* Continuous AI Studio Image Strip (between Tagline & Toggle Bar) */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative w-full overflow-hidden mb-16 pt-2 pb-4"
+        >
+          {/* Subtle edge fade gradients */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-l from-black via-black/80 to-transparent z-10" />
+
+          {/* Marquee Track moving continuously in left direction */}
+          <div
+            className="ai-strip-track py-2"
+            onTouchStart={(e) =>
+              (e.currentTarget.style.animationPlayState = "paused")
+            }
+            onTouchEnd={(e) =>
+              (e.currentTarget.style.animationPlayState = "running")
+            }
+          >
+            {/* Duplicated list so the strip scrolls seamlessly forever */}
+            {[...stripProjects, ...stripProjects].map((project, idx) => {
+              const still = project.stills[0];
+              return (
+                <Link
+                  key={`${project.id}-strip-${idx}`}
+                  href={`/ai-studio/${project.id}`}
+                  className="group relative flex-shrink-0 w-44 sm:w-52 md:w-56 aspect-[3/4] sm:aspect-[4/5] rounded-2xl overflow-hidden bg-[#0A0D14] border border-white/10 hover:border-[var(--accent)]/60 transition-all duration-300 hover:scale-[1.03] shadow-lg hover:shadow-[0_0_25px_rgba(192,57,43,0.35)] block cursor-pointer"
+                  title={`View ${project.title} details`}
+                >
+                  {still && (
+                    <Image
+                      src={still.src}
+                      alt={still.alt || project.title}
+                      fill
+                      sizes="(max-width: 640px) 176px, (max-width: 768px) 208px, 224px"
+                      className="object-cover object-center transition-transform duration-700 group-hover:scale-108"
+                    />
+                  )}
+
+                  {/* Gradient overlay for legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
+
+                  {/* Category badge */}
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-[var(--accent)]/30">
+                      {project.category}
+                    </span>
+                  </div>
+
+                  {/* Project Info at bottom */}
+                  <div className="absolute bottom-0 inset-x-0 p-3.5 z-10">
+                    <h4 className="text-white text-xs sm:text-sm font-medium line-clamp-1 group-hover:text-[var(--accent)] transition-colors">
+                      {project.title}
+                    </h4>
+                    {project.client && (
+                      <p className="text-[10px] text-[var(--fg-muted)] tracking-wider uppercase font-medium line-clamp-1 mt-0.5">
+                        {project.client}
+                      </p>
+                    )}
+                    <span className="inline-flex items-center gap-1 text-[10px] text-[var(--accent)] font-medium mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-1 group-hover:translate-y-0 duration-200">
+                      View Project
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </motion.div>
+
         {/* Portfolio Filter Tabs & Slider Section */}
         <div>
           {/* Filter Tabs Toggle Bar */}
@@ -359,13 +449,13 @@ export default function AIWorkClient() {
                 const currentStill =
                   project.stills[currentStillIdx] || project.stills[0];
 
-                const isLandscape =
-                  project.id === "purpose-of-wow" ||
-                  (currentStill &&
+                const isLandscape = Boolean(
+                  currentStill &&
                     currentStill.src &&
                     currentStill.src.width &&
                     currentStill.src.height &&
-                    currentStill.src.width / currentStill.src.height > 1.2);
+                    currentStill.src.width / currentStill.src.height > 1.2
+                );
 
                 return (
                   <div

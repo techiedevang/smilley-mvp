@@ -89,13 +89,13 @@ export default function AIProjectClient() {
           <AnimatePresence>
             {filteredProjects.map((project, index) => {
               const still = project.stills[0];
-              const isLandscape =
-                project.id === "purpose-of-wow" ||
-                (still &&
+              const isLandscape = Boolean(
+                still &&
                   still.src &&
                   still.src.width &&
                   still.src.height &&
-                  still.src.width / still.src.height > 1.2);
+                  still.src.width / still.src.height > 1.2
+              );
 
               return (
                 <motion.div
