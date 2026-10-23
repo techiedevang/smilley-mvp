@@ -5,16 +5,16 @@ import type { StaticImageData } from "next/image";
 // Note: Folder and files remain untouched in project root as specified.
 // ---------------------------------------------------------------------------
 
-// Vertical Dramas: Kaese Mujhe Tum Mil Gaye
+// Vertical Dramas: Kaise Tum Mujhe Mil Gaye
 import kaese1 from "../../Stills For AI Projects/Kaese mujhe tum mil gaye/file_00000000920c81fdbd6933f4f69a9adb.png";
 import kaese2 from "../../Stills For AI Projects/Kaese mujhe tum mil gaye/file_00000000aab48211887aff713d6e04b5.png";
 
 // Vertical Dramas: After The Identity Was Exposed
 import identity1 from "../../Stills For AI Projects/After the identity was exposed/file_000000005cfc81f48473d06e6e7059f9.png";
-import identity2 from "../../Stills For AI Projects/After the identity was exposed/file_00000000be54820c9d4d718ffecbfb05.png";
+import identity2 from "../../Stills For AI Projects/After the identity was exposed/WhatsApp Image 2026-10-01 at 3.01.26 PM (3).jpeg";
 
-// Vertical Dramas: Queen Of Cage
-import queen1 from "../../Stills For AI Projects/Queen of the Cage/file_0000000043608211b3c7b793345307c2.png";
+// Vertical Dramas: Queen Of The Cage
+import queen1 from "../../Stills For AI Projects/Queen of the Cage/Frame (1).png";
 import queen2 from "../../Stills For AI Projects/Queen of the Cage/file_00000000d2748208841b3b0be2037f09.png";
 
 // Vertical Dramas: Beyond The Prism
@@ -30,7 +30,7 @@ import signed1 from "../../Stills For AI Projects/Signed and Bound/File 002.png"
 import signed2 from "../../Stills For AI Projects/Signed and Bound/file_00000000516482109ca6bae9bdda4ee2.png";
 
 // Feature Films: Purpose of Wow
-import purposeOfWowImg from "../../Stills For AI Projects/purpose of wow.jpeg";
+import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose of wow.jpeg";
 
 // Ad Films: AI commercial still
 import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
@@ -74,6 +74,11 @@ export interface Project {
   category: ProjectCategory;
   stills: ProjectStill[];
   enabled?: boolean;
+  synopsis?: string;
+  format?: string;
+  year?: string;
+  genre?: string;
+  direction?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -83,14 +88,20 @@ export interface Project {
 export const projects: Project[] = [
   // --- Vertical Dramas (Client: Dashverse India Private Limited) ---
   {
-    id: "kaese-mujhe-tum-mil-gaye",
-    title: "Kaese Mujhe Tum Mil Gaye",
+    id: "kaise-tum-mujhe-mil-gaye",
+    title: "Kaise Tum Mujhe Mil Gaye",
     client: "Dashverse India Private Limited",
     category: "Vertical Dramas",
     enabled: true,
+    format: "Vertical Drama Series (9:16)",
+    year: "2024",
+    genre: "Romance / Drama",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A high-emotion romantic drama crafted specifically for mobile-first audiences, exploring destiny, serendipity, and the complex journey of two souls destined to cross paths against all societal odds.",
     stills: [
-      { src: kaese1, alt: "Kaese Mujhe Tum Mil Gaye still 1" },
-      { src: kaese2, alt: "Kaese Mujhe Tum Mil Gaye still 2" },
+      { src: kaese1, alt: "Kaise Tum Mujhe Mil Gaye still 1" },
+      { src: kaese2, alt: "Kaise Tum Mujhe Mil Gaye still 2" },
     ],
   },
   {
@@ -99,20 +110,32 @@ export const projects: Project[] = [
     client: "Dashverse India Private Limited",
     category: "Vertical Dramas",
     enabled: true,
+    format: "Vertical Drama Series (9:16)",
+    year: "2024",
+    genre: "Suspense / Thriller",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A gripping narrative of deception and corporate warfare where long-buried secrets, false personas, and family legacies collide the moment a clandestine identity is exposed to the public.",
     stills: [
       { src: identity1, alt: "After The Identity Was Exposed still 1" },
       { src: identity2, alt: "After The Identity Was Exposed still 2" },
     ],
   },
   {
-    id: "queen-of-cage",
-    title: "Queen Of Cage",
+    id: "queen-of-the-cage",
+    title: "Queen Of The Cage",
     client: "Dashverse India Private Limited",
     category: "Vertical Dramas",
     enabled: true,
+    format: "Action / Combat Drama (9:16)",
+    year: "2024",
+    genre: "Action / Underdog Drama",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "An adrenaline-fueled story of resilience inside the unforgiving underground fighting circuit, following a fiercely determined warrior fighting her way up to claim the championship title.",
     stills: [
-      { src: queen1, alt: "Queen Of Cage still 1" },
-      { src: queen2, alt: "Queen Of Cage still 2" },
+      { src: queen1, alt: "Queen Of The Cage still 1" },
+      { src: queen2, alt: "Queen Of The Cage still 2" },
     ],
   },
   {
@@ -121,6 +144,12 @@ export const projects: Project[] = [
     client: "Dashverse India Private Limited",
     category: "Vertical Dramas",
     enabled: true,
+    format: "Sci-Fi / Thriller (9:16)",
+    year: "2024",
+    genre: "Sci-Fi / Mystery",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A visually hypnotic vertical sci-fi odyssey exploring multiverse reflections, quantum phenomena, and the harrowing choices required to restore equilibrium across fractured timelines.",
     stills: [
       { src: prism1, alt: "Beyond The Prism still 1" },
       { src: prism2, alt: "Beyond The Prism still 2" },
@@ -134,6 +163,12 @@ export const projects: Project[] = [
     client: "Dashverse India Private Limited",
     category: "Narrative Shows",
     enabled: true,
+    format: "Narrative Show",
+    year: "2024",
+    genre: "Drama / Revenge",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "An opulent corporate vendetta saga where an exiled heiress returns in disguise to dismantle the corrupt syndicate that took her inheritance and tore her family apart.",
     stills: [
       { src: rage1, alt: "Rage Of The Heiress still 1" },
       { src: rage2, alt: "Rage Of The Heiress still 2" },
@@ -145,6 +180,12 @@ export const projects: Project[] = [
     client: "Dashverse India Private Limited",
     category: "Narrative Shows",
     enabled: true,
+    format: "Legal Drama / Noir",
+    year: "2024",
+    genre: "Legal Thriller",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A high-stakes legal thriller centered on an ironclad contract signed in shadows, exploring the moral compromises and dark secrets tethering two powerful dynasties together.",
     stills: [
       { src: signed1, alt: "Signed & Bound still 1" },
       { src: signed2, alt: "Signed & Bound still 2" },
@@ -158,6 +199,12 @@ export const projects: Project[] = [
     // No client specified; do not invent one
     category: "Feature Films",
     enabled: true,
+    format: "Cinematic Feature Film (16:9 Widescreen)",
+    year: "2024",
+    genre: "Cinematic / Drama",
+    direction: "Smiley Films",
+    synopsis:
+      "A breathtaking widescreen cinematic journey tracing the pursuit of wonder, human passion, and extraordinary life moments that reveal true purpose on the grand canvas.",
     stills: [
       { src: purposeOfWowImg, alt: "Purpose of Wow still" },
     ],
@@ -169,6 +216,12 @@ export const projects: Project[] = [
     title: "Ad Film",
     category: "Ad Films",
     enabled: false,
+    format: "Commercial Ad Campaign",
+    year: "2024",
+    genre: "Luxury Commercial",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A high-concept luxury commercial advertisement blending commercial cinematography with generative AI artistry for premium brand elevation.",
     stills: [
       { src: adShowImg, alt: "Ad Film commercial still" },
     ],

@@ -105,61 +105,65 @@ export default function AIProjectClient() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="group rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors shadow-lg flex flex-col justify-between"
                 >
-                  <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-black/40">
-                    {still && (
-                      isLandscape ? (
-                        <div className="relative w-full h-full">
-                          {/* Blurred background backdrop filling the letterbox area */}
-                          <Image
-                            src={still.src}
-                            alt=""
-                            fill
-                            className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
-                            aria-hidden
-                          />
-                          <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
-
-                          {/* Full landscape image fitted properly with object-contain */}
-                          <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                  <Link
+                    href={`/ai-studio/${project.id}`}
+                    className="group rounded-2xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors shadow-lg flex flex-col justify-between h-full block"
+                  >
+                    <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-black/40">
+                      {still && (
+                        isLandscape ? (
+                          <div className="relative w-full h-full">
+                            {/* Blurred background backdrop filling the letterbox area */}
                             <Image
                               src={still.src}
-                              alt={still.alt}
+                              alt=""
                               fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
-                              priority={index < 3}
+                              className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
+                              aria-hidden
                             />
+                            <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
+
+                            {/* Full landscape image fitted properly with object-contain */}
+                            <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                              <Image
+                                src={still.src}
+                                alt={still.alt}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
+                                priority={index < 3}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <Image
-                          src={still.src}
-                          alt={still.alt}
-                          fill
-                          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          priority={index < 3}
-                        />
-                      )
-                    )}
-                    <div className="absolute top-3 left-3 z-10">
-                      <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
-                        {project.category}
-                      </span>
+                        ) : (
+                          <Image
+                            src={still.src}
+                            alt={still.alt}
+                            fill
+                            className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            priority={index < 3}
+                          />
+                        )
+                      )}
+                      <div className="absolute top-3 left-3 z-10">
+                        <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
+                          {project.category}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-white text-lg sm:text-xl font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    {project.client && (
-                      <p className="text-[var(--fg-muted)] text-xs tracking-wider uppercase font-medium">
-                        Client: <span className="text-white/90">{project.client}</span>
-                      </p>
-                    )}
-                  </div>
+                    <div className="p-5">
+                      <h3 className="text-white text-lg sm:text-xl font-medium mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      {project.client && (
+                        <p className="text-[var(--fg-muted)] text-xs tracking-wider uppercase font-medium">
+                          Client: <span className="text-white/90">{project.client}</span>
+                        </p>
+                      )}
+                    </div>
+                  </Link>
                 </motion.div>
               );
             })}

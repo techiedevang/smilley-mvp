@@ -258,9 +258,8 @@ export default function AIWorkClient() {
 
         {/* Portfolio Filter Tabs & Slider Section */}
         <div>
-          {/* Header row: Filter tabs on left, Arrows on right */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-[var(--border)] pb-6">
-            {/* Filter Tabs */}
+          {/* Filter Tabs Toggle Bar */}
+          <div className="flex flex-wrap items-center gap-2 mb-8 border-b border-[var(--border)] pb-6">
             <div
               className="flex flex-wrap items-center gap-2"
               role="tablist"
@@ -289,166 +288,219 @@ export default function AIWorkClient() {
                 );
               })}
             </div>
-
-            {/* Slider Arrow Navigation */}
-            <div className="flex items-center gap-2 self-end sm:self-auto">
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Previous slide"
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-md"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Next slide"
-                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-[var(--border)] bg-[var(--bg-card)]/80 hover:bg-[var(--accent)] hover:text-black hover:border-[var(--accent)] flex items-center justify-center text-white transition-all duration-300 cursor-pointer shadow-md"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
           </div>
 
-          {/* Carousel / Slider Container */}
+          {/* Carousel / Slider Wrapper with Left & Right < > Glass Navigation Buttons like in Featured Section */}
           <div
-            ref={sliderRef}
-            onScroll={onSliderScroll}
-            onKeyDown={onKeyDown}
+            className="relative w-full group/slider"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            onTouchStart={() => setIsPaused(true)}
-            onTouchEnd={() => setIsPaused(false)}
-            tabIndex={0}
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="AI Studio Projects Slider"
-            className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 pt-2 -mx-2 px-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]/50 rounded-xl"
-            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
           >
-            {displayedProjects.map((project, index) => {
-              const currentStillIdx = selectedStillByProject[project.id] ?? 0;
-              const currentStill =
-                project.stills[currentStillIdx] || project.stills[0];
+            {/* Previous Arrow Button (<) positioned at left of slider */}
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="absolute -left-2 sm:left-2 md:-left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 glass rounded-full flex items-center justify-center text-white hover:bg-[var(--accent)]/30 hover:border-[var(--accent)]/40 transition-all duration-300 hover:scale-110 shadow-xl cursor-pointer"
+              aria-label="Previous project"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
 
-              const isLandscape =
-                project.id === "purpose-of-wow" ||
-                (currentStill &&
-                  currentStill.src &&
-                  currentStill.src.width &&
-                  currentStill.src.height &&
-                  currentStill.src.width / currentStill.src.height > 1.2);
+            {/* Next Arrow Button (>) positioned at right of slider */}
+            <button
+              type="button"
+              onClick={handleNext}
+              className="absolute -right-2 sm:right-2 md:-right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 glass rounded-full flex items-center justify-center text-white hover:bg-[var(--accent)]/30 hover:border-[var(--accent)]/40 transition-all duration-300 hover:scale-110 shadow-xl cursor-pointer"
+              aria-label="Next project"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
 
-              return (
-                <div
-                  key={project.id}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${index + 1} of ${displayedProjects.length}: ${project.title}`}
-                  className="flex-shrink-0 w-[86vw] sm:w-[70vw] md:w-[46%] lg:w-[31.5%] snap-start group"
-                >
-                  <div className="bg-[var(--bg-card)] rounded-2xl overflow-hidden border border-[var(--border)] hover:border-[var(--accent)]/40 transition-all duration-300 flex flex-col h-full shadow-lg hover:shadow-2xl">
-                    {/* Main Project Still */}
-                    <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full overflow-hidden bg-[#0A0D14]">
-                      {currentStill && (
-                        isLandscape ? (
-                          <div className="relative w-full h-full">
-                            {/* Blurred background backdrop filling the card letterbox area */}
-                            <Image
-                              src={currentStill.src}
-                              alt=""
-                              fill
-                              className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
-                              aria-hidden
-                            />
-                            <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
+            {/* Carousel / Slider Container — slides continuously in left direction */}
+            <div
+              ref={sliderRef}
+              onScroll={onSliderScroll}
+              onKeyDown={onKeyDown}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+              tabIndex={0}
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="AI Studio Projects Slider"
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 pt-2 -mx-2 px-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]/50 rounded-xl"
+              style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+            >
+              {displayedProjects.map((project, index) => {
+                const currentStillIdx = selectedStillByProject[project.id] ?? 0;
+                const currentStill =
+                  project.stills[currentStillIdx] || project.stills[0];
 
-                            {/* Full landscape image fitted properly with object-contain */}
-                            <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                const isLandscape =
+                  project.id === "purpose-of-wow" ||
+                  (currentStill &&
+                    currentStill.src &&
+                    currentStill.src.width &&
+                    currentStill.src.height &&
+                    currentStill.src.width / currentStill.src.height > 1.2);
+
+                return (
+                  <div
+                    key={project.id}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${index + 1} of ${displayedProjects.length}: ${project.title}`}
+                    className="flex-shrink-0 w-[86vw] sm:w-[70vw] md:w-[46%] lg:w-[31.5%] snap-start group"
+                  >
+                    <Link
+                      href={`/ai-studio/${project.id}`}
+                      className="bg-[var(--bg-card)] rounded-2xl overflow-hidden border border-[var(--border)] hover:border-[var(--accent)]/50 transition-all duration-300 flex flex-col h-full shadow-lg hover:shadow-2xl group/card cursor-pointer block"
+                    >
+                      {/* Main Project Still */}
+                      <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full overflow-hidden bg-[#0A0D14]">
+                        {currentStill && (
+                          isLandscape ? (
+                            <div className="relative w-full h-full">
+                              {/* Blurred background backdrop filling the card letterbox area */}
                               <Image
                                 src={currentStill.src}
-                                alt={currentStill.alt}
+                                alt=""
                                 fill
-                                sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
-                                className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
-                                priority={index < 2}
+                                className="object-cover scale-125 blur-xl opacity-45 brightness-75 pointer-events-none"
+                                aria-hidden
                               />
+                              <div className="absolute inset-0 bg-black/30 pointer-events-none z-[1]" />
+
+                              {/* Full landscape image fitted properly with object-contain */}
+                              <div className="relative w-full h-full z-10 flex items-center justify-center p-2.5">
+                                <Image
+                                  src={currentStill.src}
+                                  alt={currentStill.alt}
+                                  fill
+                                  sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
+                                  className="object-contain object-center transition-transform duration-700 group-hover:scale-105 drop-shadow-2xl"
+                                  priority={index < 2}
+                                />
+                              </div>
                             </div>
-                          </div>
-                        ) : (
-                          <Image
-                            src={currentStill.src}
-                            alt={currentStill.alt}
-                            fill
-                            sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
-                            className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                            priority={index < 2}
-                          />
-                        )
+                          ) : (
+                            <Image
+                              src={currentStill.src}
+                              alt={currentStill.alt}
+                              fill
+                              sizes="(max-width: 640px) 86vw, (max-width: 1024px) 46vw, 32vw"
+                              className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                              priority={index < 2}
+                            />
+                          )
+                        )}
+
+                        {/* Top badge */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
+                          <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
+                            {project.category}
+                          </span>
+                        </div>
+
+                        {/* Hover Overlay matching Featured Work style */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 z-10 flex items-end p-4">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] flex items-center gap-1.5 translate-y-2 group-hover/card:translate-y-0 transition-transform">
+                            View Details
+                            <svg
+                              className="w-3.5 h-3.5"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Stills Gallery Selector (if project has multiple stills) */}
+                      {project.stills.length > 1 && (
+                        <div className="px-4 pt-3 flex items-center gap-2 overflow-x-auto scrollbar-none z-20">
+                          <span className="text-[10px] text-[var(--fg-muted)] tracking-wider uppercase font-medium mr-1 flex-shrink-0">
+                            Stills:
+                          </span>
+                          {project.stills.map((still, sIdx) => (
+                            <button
+                              key={sIdx}
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setSelectedStillByProject((prev) => ({
+                                  ...prev,
+                                  [project.id]: sIdx,
+                                }));
+                              }}
+                              aria-label={`View still ${sIdx + 1} of ${project.title}`}
+                              className={`relative w-10 h-10 rounded-md overflow-hidden border transition-all flex-shrink-0 cursor-pointer ${
+                                sIdx === currentStillIdx
+                                  ? "border-[var(--accent)] scale-105 shadow-sm ring-1 ring-[var(--accent)]"
+                                  : "border-white/10 opacity-60 hover:opacity-100"
+                              }`}
+                            >
+                              <Image
+                                src={still.src}
+                                alt={still.alt}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                              />
+                            </button>
+                          ))}
+                        </div>
                       )}
 
-                      {/* Top badge */}
-                      <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10 pointer-events-none">
-                        <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[var(--accent)] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-[var(--accent)]/30">
-                          {project.category}
-                        </span>
+                      {/* Information Area */}
+                      <div className="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                          <h3 className="font-serif text-xl sm:text-2xl font-light text-white group-hover/card:text-[var(--accent)] transition-colors duration-300">
+                            {project.title}
+                          </h3>
+                          {project.client && (
+                            <p className="text-xs text-[var(--fg-muted)] tracking-wider uppercase font-medium mt-1.5">
+                              Client: <span className="text-white/90">{project.client}</span>
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Stills Gallery Selector (if project has multiple stills) */}
-                    {project.stills.length > 1 && (
-                      <div className="px-4 pt-3 flex items-center gap-2 overflow-x-auto scrollbar-none">
-                        <span className="text-[10px] text-[var(--fg-muted)] tracking-wider uppercase font-medium mr-1 flex-shrink-0">
-                          Stills:
-                        </span>
-                        {project.stills.map((still, sIdx) => (
-                          <button
-                            key={sIdx}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedStillByProject((prev) => ({
-                                ...prev,
-                                [project.id]: sIdx,
-                              }));
-                            }}
-                            aria-label={`View still ${sIdx + 1} of ${project.title}`}
-                            className={`relative w-10 h-10 rounded-md overflow-hidden border transition-all flex-shrink-0 cursor-pointer ${
-                              sIdx === currentStillIdx
-                                ? "border-[var(--accent)] scale-105 shadow-sm ring-1 ring-[var(--accent)]"
-                                : "border-white/10 opacity-60 hover:opacity-100"
-                            }`}
-                          >
-                            <Image
-                              src={still.src}
-                              alt={still.alt}
-                              fill
-                              sizes="40px"
-                              className="object-cover"
-                            />
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Information Area */}
-                    <div className="p-5 flex flex-col flex-grow justify-between">
-                      <div>
-                        <h3 className="font-serif text-xl sm:text-2xl font-light text-white group-hover:text-[var(--accent)] transition-colors duration-300">
-                          {project.title}
-                        </h3>
-                        {project.client && (
-                          <p className="text-xs text-[var(--fg-muted)] tracking-wider uppercase font-medium mt-1.5">
-                            Client: <span className="text-white/90">{project.client}</span>
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                    </Link>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Slider Pagination Dots */}
