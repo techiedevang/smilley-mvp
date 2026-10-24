@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { projects, type Project } from "@/data/projects";
+import {
+  projects,
+  CATEGORY_FILTERS,
+  type FilterCategory,
+  type Project,
+} from "@/data/projects";
 
 const labelClass =
   "text-[var(--accent)] text-xs font-bold uppercase tracking-widest mb-2 block";
@@ -11,6 +16,9 @@ const valueClass = "text-white text-sm md:text-base leading-relaxed";
 
 export default function ProjectDetail({ project }: { project: Project }) {
   const [selectedStillIndex, setSelectedStillIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] =
+    useState<FilterCategory>("All");
+
   const currentStill = project.stills[selectedStillIndex] || project.stills[0];
 
   const isLandscape = Boolean(
@@ -21,9 +29,19 @@ export default function ProjectDetail({ project }: { project: Project }) {
       currentStill.src.width / currentStill.src.height > 1.2
   );
 
-  const otherProjects = projects.filter(
-    (p) => p.id !== project.id && p.enabled !== false
+  const availableFilters = useMemo(
+    () => CATEGORY_FILTERS.filter((f) => f.enabled),
+    []
   );
+
+  const filteredOtherProjects = useMemo(() => {
+    return projects.filter((p) => {
+      if (p.enabled === false) return false;
+      if (p.id === project.id) return false;
+      if (selectedCategory === "All") return true;
+      return p.category === selectedCategory;
+    });
+  }, [selectedCategory, project.id]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)]">
@@ -181,47 +199,57 @@ export default function ProjectDetail({ project }: { project: Project }) {
                   </p>
                 </div>
               )}
-
-              {/* Contact CTA button */}
-              <div className="pt-4">
-                <Link
-                  href="/#contact"
-                  className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-light)] text-black px-7 py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(192,57,43,0.35)] hover:shadow-[0_0_30px_rgba(192,57,43,0.5)] transform hover:-translate-y-0.5 cursor-pointer"
-                >
-                  Have an idea? Let’s make it.
-                  <svg
-                    className="w-4 h-4 ml-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </svg>
-                </Link>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Other Works Section matching FilmDetail style */}
-      {otherProjects.length > 0 && (
-        <section className="py-16 md:py-24 px-6 md:px-12 border-t border-[var(--border)] bg-[#07090F]">
-          <div className="mx-auto max-w-7xl">
-            <h3 className="text-white font-serif text-3xl md:text-4xl font-light uppercase text-center">
-              More AI Studio Works
-            </h3>
-            <div className="mt-2 flex justify-center">
-              <div className="w-12 h-0.5 bg-[var(--accent)]" />
-            </div>
+      {/* More AI Studio Works Section */}
+      <section className="py-16 md:py-24 px-6 md:px-12 border-t border-[var(--border)] bg-[#07090F]">
+        <div className="mx-auto max-w-7xl">
+          <h3 className="text-white font-serif text-3xl md:text-4xl font-light uppercase text-center">
+            More AI Studio Works
+          </h3>
+          <div className="mt-2 flex justify-center">
+            <div className="w-12 h-0.5 bg-[var(--accent)]" />
+          </div>
 
-            <div className="flex flex-wrap justify-center gap-6 mt-12">
-              {otherProjects.map((p) => {
+          {/* Category Toggle Bar under More AI Studio Works */}
+          <div className="flex flex-wrap justify-center items-center gap-2 mt-8 mb-12">
+            <div
+              className="flex flex-wrap justify-center items-center gap-2"
+              role="tablist"
+              aria-label="Filter More AI Studio works by category"
+            >
+              {availableFilters.map((tab) => {
+                const isActive = selectedCategory === tab.key;
+                const isDisabled = Boolean(tab.disabled);
+                return (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      if (!isDisabled) setSelectedCategory(tab.key);
+                    }}
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "bg-[var(--accent)] text-black font-semibold shadow-[0_0_15px_rgba(192,57,43,0.4)]"
+                        : "bg-white/5 text-[var(--fg-muted)] hover:bg-white/10 hover:text-white border border-white/5"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Filtered Projects Grid */}
+          {filteredOtherProjects.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-6">
+              {filteredOtherProjects.map((p) => {
                 const still = p.stills[0];
                 return (
                   <Link
@@ -251,9 +279,38 @@ export default function ProjectDetail({ project }: { project: Project }) {
                 );
               })}
             </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-[var(--fg-muted)] text-sm">
+                No other projects found in this category.
+              </p>
+            </div>
+          )}
+
+          {/* Contact CTA button positioned at the very bottom (after More AI Studio Works) */}
+          <div className="mt-16 md:mt-20 text-center">
+            <Link
+              href="/#contact"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-light)] text-black px-8 py-4 rounded-xl font-semibold text-sm md:text-base tracking-wide transition-all shadow-[0_0_25px_rgba(192,57,43,0.35)] hover:shadow-[0_0_35px_rgba(192,57,43,0.5)] transform hover:-translate-y-0.5 cursor-pointer"
+            >
+              Have an idea? Let’s make it.
+              <svg
+                className="w-4 h-4 ml-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   );
 }

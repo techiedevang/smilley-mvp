@@ -31,7 +31,7 @@ import signed2 from "../../Stills For AI Projects/Signed and Bound/file_00000000
 
 // Feature Films: Purpose of Wow
 import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose-of-wow-portrait.jpg";
-import purposeOfWowLandscape from "../../Stills For AI Projects/Purpose of Wow/purpose of wow.jpeg";
+import purposeOfWowLandscape from "../../Stills For AI Projects/purpose of wow.jpeg";
 
 // Ad Films: AI commercial still
 import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
