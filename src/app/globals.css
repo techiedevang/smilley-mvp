@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 :root {
+  /* Typography */
+  --font-jakarta: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-syne: "Syne", system-ui, sans-serif;
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+
   /* ================================
      BRAND COLOR PALETTE
      #0E0E0E | #EAEAEA | #989898 | #AB2521
