@@ -22,12 +22,19 @@ import prism1 from "../../Stills For AI Projects/Beyond the Prism/file_000000007
 import prism2 from "../../Stills For AI Projects/Beyond the Prism/file_000000007f4081f4993321911469727d.png";
 
 // Narrative Shows: Rage Of The Heiress
-import rage1 from "../../Stills For AI Projects/Rage of Heiress/file_000000000d4c820ca17fd71a169fdd4f.png";
-import rage2 from "../../Stills For AI Projects/Rage of Heiress/file_00000000a420820e942a3917a089f571.png";
+import rageImg from "../../Stills For AI Projects/Rage of Heiress/rge.png";
 
 // Narrative Shows: Signed & Bound
-import signed1 from "../../Stills For AI Projects/Signed and Bound/File 002.png";
-import signed2 from "../../Stills For AI Projects/Signed and Bound/file_00000000516482109ca6bae9bdda4ee2.png";
+import signedImg from "../../Stills For AI Projects/Signed and Bound/sign.png";
+
+// Narrative Shows: Striker's Tale
+import strikerTaleImg from "../../Stills For AI Projects/Striker's Tale/Striker’s Tale.png";
+
+// Narrative Shows: Too Late to Love Me
+import tooLateToLoveMeImg from "../../Stills For AI Projects/Too Late to Love Me/Too Late to Love Me.png";
+
+// Narrative Shows: Contract Marriage
+import contractMarriageImg from "../../Stills For AI Projects/Contract Marriage/Contract Marriage.png";
 
 // Feature Films: Purpose of Wow
 import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose-of-wow-portrait.jpg";
@@ -99,7 +106,7 @@ export const projects: Project[] = [
     genre: "Romance / Drama",
     direction: "Smiley Films AI Studio",
     synopsis:
-      "A high-emotion romantic drama crafted specifically for mobile-first audiences, exploring destiny, serendipity, and the complex journey of two souls destined to cross paths against all societal odds.",
+      "A romantic drama crafted specifically for mobile-first audiences, exploring destiny, serendipity, and the complex journey of two souls destined to cross paths against all societal odds.",
     stills: [
       { src: kaese1, alt: "Kaise Tum Mujhe Mil Gaye still 1" },
       { src: kaese2, alt: "Kaise Tum Mujhe Mil Gaye still 2" },
@@ -171,8 +178,7 @@ export const projects: Project[] = [
     synopsis:
       "An opulent corporate vendetta saga where an exiled heiress returns in disguise to dismantle the corrupt syndicate that took her inheritance and tore her family apart.",
     stills: [
-      { src: rage1, alt: "Rage Of The Heiress still 1" },
-      { src: rage2, alt: "Rage Of The Heiress still 2" },
+      { src: rageImg, alt: "Rage Of The Heiress still" },
     ],
   },
   {
@@ -188,8 +194,55 @@ export const projects: Project[] = [
     synopsis:
       "A high-stakes legal thriller centered on an ironclad contract signed in shadows, exploring the moral compromises and dark secrets tethering two powerful dynasties together.",
     stills: [
-      { src: signed1, alt: "Signed & Bound still 1" },
-      { src: signed2, alt: "Signed & Bound still 2" },
+      { src: signedImg, alt: "Signed & Bound still" },
+    ],
+  },
+  {
+    id: "strikers-tale",
+    title: "Striker's Tale",
+    client: "Dashverse India Private Limited",
+    category: "Narrative Shows",
+    enabled: true,
+    format: "Narrative Show",
+    year: "2024",
+    genre: "Action / Sports Drama",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "An electrifying sports narrative charting the journey of an underdog striker fighting personal battles and intense rivalries on and off the field.",
+    stills: [
+      { src: strikerTaleImg, alt: "Striker's Tale still" },
+    ],
+  },
+  {
+    id: "too-late-to-love-me",
+    title: "Too Late to Love Me",
+    client: "Dashverse India Private Limited",
+    category: "Narrative Shows",
+    enabled: true,
+    format: "Narrative Show",
+    year: "2024",
+    genre: "Romance / Melodrama",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "A poignant narrative of unspoken words, missed chances, and the bitter reckoning of realizing true love when time has already run out.",
+    stills: [
+      { src: tooLateToLoveMeImg, alt: "Too Late to Love Me still" },
+    ],
+  },
+  {
+    id: "contract-marriage",
+    title: "Contract Marriage",
+    client: "Dashverse India Private Limited",
+    category: "Narrative Shows",
+    enabled: true,
+    format: "Narrative Show",
+    year: "2024",
+    genre: "Romantic Drama / Suspense",
+    direction: "Smiley Films AI Studio",
+    synopsis:
+      "An arrangement of convenience turns into a turbulent journey of secrets, shifting loyalties, and unexpected emotions under the terms of a high-stakes contract marriage.",
+    stills: [
+      { src: contractMarriageImg, alt: "Contract Marriage still" },
     ],
   },
 

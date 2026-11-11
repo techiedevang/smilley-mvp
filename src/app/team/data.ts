@@ -29,6 +29,16 @@ export const teamMembers: {
     socialLinks: [],
   },
   {
+    slug: "iftekhar-amrohi",
+    name: "Iftekhar Amrohi",
+    designation: "Head of Film Financing & Investor Relations",
+    image: "/images/teams/iftekhar-amrohi.jpeg",
+    description:
+      "Leads film financing, capital structuring, and investor relations, driving strategic funding initiatives and partnerships across Smiley Films projects.",
+    imdb: "",
+    socialLinks: [],
+  },
+  {
     slug: "amrita-sengupta",
     name: "Amrita Sengupta",
     designation: "Head of Content & Creative Strategy",
