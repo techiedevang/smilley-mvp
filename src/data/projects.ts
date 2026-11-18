@@ -36,9 +36,9 @@ import tooLateToLoveMeImg from "../../Stills For AI Projects/Too Late to Love Me
 // Narrative Shows: Contract Marriage
 import contractMarriageImg from "../../Stills For AI Projects/Contract Marriage/Contract Marriage.png";
 
-// Feature Films: Purpose of Wow
-import purposeOfWowImg from "../../Stills For AI Projects/Purpose of Wow/purpose-of-wow-portrait.jpg";
-import purposeOfWowLandscape from "../../Stills For AI Projects/purpose of wow.jpeg";
+// Feature Films: The Purpose of Wow
+import purposeOfWowPortrait from "../../Stills For AI Projects/Purpose of Wow/the-purpose-of-wow-portrait.jpg";
+import purposeOfWowTitleCard from "../../Stills For AI Projects/Purpose of Wow/The Purpose of Wow Title Card.png";
 
 // Ad Films: AI commercial still
 import adShowImg from "../../Stills For AI Projects/Ad Shows/ad-show-still.jpg";
@@ -248,20 +248,20 @@ export const projects: Project[] = [
 
   // --- Feature Films ---
   {
-    id: "purpose-of-wow",
-    title: "Purpose of Wow",
+    id: "the-purpose-of-wow",
+    title: "The Purpose of Wow",
     client: "In-House Production",
     category: "Feature Films",
     enabled: true,
-    format: "Cinematic Feature Film",
+    format: "Animated Feature Film",
     year: "2024",
     genre: "Cinematic / Drama",
     direction: "Smiley Films",
     synopsis:
-      "A breathtaking cinematic journey tracing the pursuit of wonder, human passion, and extraordinary life moments that reveal true purpose on the grand canvas.",
+      "A breathtaking animated cinematic journey tracing the pursuit of wonder, human passion, and extraordinary life moments that reveal true purpose on the grand canvas.",
     stills: [
-      { src: purposeOfWowImg, alt: "Purpose of Wow portrait still" },
-      { src: purposeOfWowLandscape, alt: "Purpose of Wow title still" },
+      { src: purposeOfWowPortrait, alt: "The Purpose of Wow still" },
+      { src: purposeOfWowTitleCard, alt: "The Purpose of Wow title still" },
     ],
   },
 
