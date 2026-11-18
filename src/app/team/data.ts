@@ -32,7 +32,7 @@ export const teamMembers: {
     slug: "iftekhar-amrohi",
     name: "Iftekhar Amrohi",
     designation: "Head of Film Financing & Investor Relations",
-    image: "/images/teams/iftekhar-amrohi.jpeg",
+    image: "/images/teams/iftekhar-amrohi.png",
     description:
       "Leads film financing, capital structuring, and investor relations, driving strategic funding initiatives and partnerships across Smiley Films projects.",
     imdb: "",
