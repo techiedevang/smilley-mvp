@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SecurityGuard from "@/components/SecurityGuard";
 
 export const metadata: Metadata = {
   title: "Smiley Films | Touching Emotional Chords",
@@ -29,6 +30,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
+        <SecurityGuard />
         <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)] relative">
           <Header />
           <main>{children}</main>
