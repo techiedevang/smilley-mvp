@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Ensure search engine bots (like Googlebot-Image) can freely fetch favicons
+Allow: /favicon*
+Allow: /icon*
+Allow: /site.webmanifest
