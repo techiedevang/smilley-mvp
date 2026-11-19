@@ -28,7 +28,7 @@ import rageImg from "../../Stills For AI Projects/Rage of Heiress/rge.png";
 import signedImg from "../../Stills For AI Projects/Signed and Bound/sign.png";
 
 // Narrative Shows: Striker's Tale
-import strikerTaleImg from "../../Stills For AI Projects/Striker's Tale/Striker’s Tale.png";
+import strikerTaleImg from "../../Stills For AI Projects/Striker's Tale/strikers-tale.png";
 
 // Narrative Shows: Too Late to Love Me
 import tooLateToLoveMeImg from "../../Stills For AI Projects/Too Late to Love Me/Too Late to Love Me.png";
